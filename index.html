@@ -248,9 +248,7 @@ svg.radar-igg{width:414px; height:306px; flex-shrink:0; display:block; margin:0 
 .prod .pbody{padding:16px 16px 18px;}
 .prod .prank{display:inline-block; font-size:18px; font-weight:800; color:var(--mint-600); background:var(--mint-50); padding:5px 12px; border-radius:10px; margin-bottom:8px;}
 .prod .pnm{font-size:25px; font-weight:800; color:var(--n-900); line-height:1.2; margin-bottom:6px; letter-spacing:-.02em;}
-.prod .pk{font-size:20px; color:var(--txt-dim); line-height:1.3; font-weight:500; margin-bottom:10px; min-height:52px;}
-.prod .pprice{font-size:26px; font-weight:800; color:var(--n-900); white-space:nowrap;}
-.prod .pprice s{display:block; font-size:18px; color:var(--n-300); font-weight:600; margin-bottom:1px;}
+.prod .pk{font-size:21px; color:var(--txt-dim); line-height:1.38; font-weight:600; margin-bottom:2px; min-height:58px;}
 
 /* 도시락(2열) */
 .meal-row{display:flex; gap:16px;}
@@ -267,8 +265,8 @@ svg.radar-igg{width:414px; height:306px; flex-shrink:0; display:block; margin:0 
 .swap .from{color:var(--caution);} .swap .to{color:var(--good);} .swap .arw{color:var(--n-300); font-size:28px;}
 .routine{font-size:25px; line-height:1.45; color:var(--n-800); background:var(--mint-50); border-left:5px solid var(--mint); padding:18px 22px; border-radius:12px; font-weight:600;}
 .careset{display:flex; align-items:center; gap:16px; padding:22px 26px; border-radius:22px; background:linear-gradient(120deg,var(--mint-50),#fff); border:2px solid var(--mint-100);}
-.careset .cs-t{font-size:23px; font-weight:800; color:var(--n-900);} .careset .cs-p{font-size:36px; font-weight:800; color:var(--mint-600);}
-.careset .cs-p s{font-size:23px; color:var(--n-300); font-weight:600; margin-right:10px;}
+.careset .cs-t{font-size:25px; font-weight:800; color:var(--n-900);}
+.careset .cs-desc{font-size:22px; color:var(--txt-dim); font-weight:600; line-height:1.4; margin-top:8px;}
 .careset .cs-l{flex:1;}
 
 /* ============ 베네핏 ============ */
@@ -486,22 +484,22 @@ const DUMMY_IGG=[
     foods:[['우유',5],['체다치즈',5],['요거트',4],['버터',4],['달걀흰자',4],['새우',3],['소고기',3],['효모',3],['밀',2],['돼지고기',2],['바나나',2],['고등어',2],['쌀',1],['현미',1],['닭고기',1],['브로콜리',1],['양배추',1],['사과',1],['두부',1],['마늘',1],['양파',1]],
     swaps:[['우유·요거트','식물성 음료(귀리·아몬드유)'],['체다치즈','두부·식물성 치즈']],
     prods:[[SUP.darae,'추천 1순위'],[SUP.bio,'추천 2순위'],[SUP.clean,'추천 3순위']], meals:[MEAL.samgye,MEAL.salmon],
-    routine:'유제품을 2주만 줄이고 속 편안함·피부 컨디션 변화를 체크해 보세요.', setPrice:156400, setOrig:255000 },
+    routine:'유제품을 2주만 줄이고 속 편안함·피부 컨디션 변화를 체크해 보세요.', setDesc:'다래케어·바이오밸런스·클린밸런스로 과민반응 완화와 장·피부 밸런스를 한 번에 챙기는 구성이에요.', setPrice:156400, setOrig:255000 },
   { key:'GUT', mascot:'🐧', typeNo:'1유형', typeName:'장 건강 저하형', catch:'장속 가스 폭풍을\n잔잔 모드로 돌려야 해요.', color:'#12A09A',
     foods:[['밀',5],['통밀',4],['보리',4],['효모',4],['옥수수',3],['귀리',3],['메밀',3],['대두',2],['우유',2],['달걀노른자',2],['쌀',1],['감자',1],['고구마',1],['닭고기',1],['돼지고기',1],['소고기',1],['두부',1],['당근',1],['브로콜리',1],['사과',1],['연어',1]],
     swaps:[['밀가루 면·빵','쌀·두부면·글루텐프리'],['보리차','루이보스·옥수수차']],
     prods:[[SUP.bio,'추천 1순위'],[SUP.clean,'추천 2순위'],[SUP.reset,'조건부 · 글루텐']], meals:[MEAL.galbi,MEAL.beef],
-    routine:'‘글루텐 프리 리셋데이’를 주 2회 정해 4주 체험 후 컨디션을 비교해 보세요.', setPrice:147800, setOrig:235000 },
+    routine:'‘글루텐 프리 리셋데이’를 주 2회 정해 4주 체험 후 컨디션을 비교해 보세요.', setDesc:'바이오밸런스·클린밸런스·리셋데이로 글루텐 부담을 줄이고 속을 편하게 하는 구성이에요.', setPrice:147800, setOrig:235000 },
   { key:'SKIN', mascot:'🦊', typeNo:'5유형', typeName:'염증형', catch:'몸속 불씨를\n진정 모드로 돌려야 해요.', color:'#F04545',
     foods:[['아몬드',5],['달걀노른자',5],['땅콩',4],['캐슈넛',4],['달걀흰자',4],['호두',3],['참깨',3],['새우',3],['밀',2],['우유',2],['돼지고기',2],['쌀',1],['닭고기',1],['소고기',1],['양배추',1],['사과',1],['대구',1],['두부',1],['마늘',1],['양파',1],['바나나',1]],
     swaps:[['아몬드·캐슈넛','호박씨·해바라기씨'],['달걀 요리','두부 스크램블']],
     prods:[[SUP.bio,'추천 1순위'],[SUP.clean,'추천 2순위'],[SUP.young,'추천 3순위']], meals:[MEAL.salmon,MEAL.cod],
-    routine:'견과·달걀을 2주 줄이고 피부 트러블·컨디션 변화를 기록해 보세요.', setPrice:124000, setOrig:180000 },
+    routine:'견과·달걀을 2주 줄이고 피부 트러블·컨디션 변화를 기록해 보세요.', setDesc:'바이오밸런스·클린밸런스·영데이즈로 몸속 염증 진정에 초점을 맞춘 구성이에요.', setPrice:124000, setOrig:180000 },
   { key:'META', mascot:'🦁', typeNo:'4유형', typeName:'동물성 단백 민감형', catch:'좋아하는 고기,\n종류를 바꿔가며 즐겨요.', color:'#A65A2B',
     foods:[['소고기',4],['돼지고기',4],['새우',4],['고등어',3],['달걀흰자',3],['우유',3],['닭고기',2],['효모',2],['밀',2],['대두',2],['바나나',2],['쌀',1],['닭가슴살',1],['현미',1],['브로콜리',1],['고구마',1],['사과',1],['양배추',1],['두부',1],['당근',1],['양파',1]],
     swaps:[['소·돼지 붉은 고기 잦은 끼','닭가슴살·흰살생선으로 번갈아'],['가공육(햄·소시지)','수비드 살코기·두부']],
     prods:[[SUP.bio,'추천 1순위'],[SUP.dang,'추천 2순위'],[SUP.neuro,'추천 3순위']], meals:[MEAL.cod,MEAL.lasagna],
-    routine:'특정 고기를 완전히 끊기보다, 종류를 바꿔가며 다양하게 즐기고 반응을 살펴보세요.', setPrice:133800, setOrig:220000 },
+    routine:'특정 고기를 완전히 끊기보다, 종류를 바꿔가며 다양하게 즐기고 반응을 살펴보세요.', setDesc:'바이오밸런스·당당케어·뉴로마스터로 동물성 단백 식습관의 대사 부담을 함께 관리하는 구성이에요.', setPrice:133800, setOrig:220000 },
 ];
 const AX=['체중조절능력','장 건강','독소 스트레스','항산화 능력','정신건강 및 집중력','유전자 기능'];
 const AX_SHORT=['체중조절','장 건강','독소 케어','항산화','정신·집중','유전자'];
@@ -509,19 +507,19 @@ const DUMMY_CMFA=[
   { key:'MIND', focus:'정신건강 및 집중력', mascot:'🧠', zones:['mid','good','good','watch','watch','good'],
     prio:[['정신건강 · 집중/스트레스','watch'],['항산화 · 산화 스트레스','watch'],['체중 · 대사 효율','mid']],
     prods:[[SUP.meta,'수면·이완'],[SUP.neuro,'집중·혈행']], meal:MEAL.beef, diet:'저GI 식단', life:'수면 위생·오후 리듬',
-    routine:'취침 1시간 전 화면을 줄이고, 오후엔 카페인 대신 산책으로 리듬을 잡아보세요.', setPrice:71900, setOrig:106000 },
+    routine:'취침 1시간 전 화면을 줄이고, 오후엔 카페인 대신 산책으로 리듬을 잡아보세요.', setDesc:'메타드림·뉴로마스터로 수면·이완과 집중·혈행을 함께 챙기는 구성이에요.', setPrice:71900, setOrig:106000 },
   { key:'GUT', focus:'장 건강', mascot:'🌱', zones:['watch','watch','watch','mid','good','good'],
     prio:[['장 · 장내 환경/소화','watch'],['독소 · 해독 부담','watch'],['체중 · 대사 효율','watch']],
     prods:[[SUP.reset,'장 건강'],[SUP.sun,'프리바이오틱스']], meal:MEAL.galbi, diet:'장 친화 저자극·발효식', life:'규칙적 식사·야식 줄이기',
-    routine:'식사 시간을 일정하게 하고, 발효식(김치·요거트)을 하루 한 번 곁들여 보세요.', setPrice:60900, setOrig:93000 },
+    routine:'식사 시간을 일정하게 하고, 발효식(김치·요거트)을 하루 한 번 곁들여 보세요.', setDesc:'리셋데이·썬화이버로 장내 환경을 편안하게 다잡는 구성이에요.', setPrice:60900, setOrig:93000 },
   { key:'WEIGHT', focus:'체중조절능력', mascot:'⚖️', zones:['watch','mid','watch','watch','good','good'],
     prio:[['체중 · 혈당/대사','watch'],['항산화 · 산화 스트레스','watch'],['독소 · 해독 부담','watch']],
     prods:[[SUP.dang,'혈당·대사'],[SUP.sun,'포만감·식이섬유']], meal:MEAL.lasagna, diet:'저당·가당음료 줄이기', life:'좌식 줄이기·틈새 활동',
-    routine:'가당음료를 물·탄산수로 바꾸고, 한 시간에 한 번은 일어나 움직여 보세요.', setPrice:95800, setOrig:157000 },
+    routine:'가당음료를 물·탄산수로 바꾸고, 한 시간에 한 번은 일어나 움직여 보세요.', setDesc:'당당케어·썬화이버로 체중·혈당 관리를 함께 돕는 구성이에요.', setPrice:95800, setOrig:157000 },
   { key:'ANTIOX', focus:'항산화 능력', mascot:'✨', zones:['good','good','mid','mid','good','good'],
     prio:[['항산화 · 산화 스트레스','mid'],['독소 · 해독 부담','mid'],['체중 · 대사 효율(유지)','good']],
     prods:[[SUP.young,'글루타치온·SOD'],[SUP.clean,'피부 이너뷰티']], meal:MEAL.cod, diet:'컬러푸드(채소·과일·베리)', life:'반주 줄이기·수분',
-    routine:'전반적으로 좋아요! 컬러푸드를 한 끼에 한 가지씩 더해 지금 컨디션을 유지해 보세요.', setPrice:85000, setOrig:120000 },
+    routine:'전반적으로 좋아요! 컬러푸드를 한 끼에 한 가지씩 더해 지금 컨디션을 유지해 보세요.', setDesc:'영데이즈·클린밸런스로 지금의 좋은 컨디션을 오래 유지하는 구성이에요.', setPrice:85000, setOrig:120000 },
 ];
 
 /* ===== 문진 ===== */
@@ -566,7 +564,7 @@ const BRANCH={
     SYMPTOM_Q3,
   ]},
 };
-const ZONE={ good:{c:'#12BA7E',bg:'#E9FBF5',t:'좋음'}, mid:{c:'#E3A700',bg:'#FFF8D8',t:'보통'}, watch:{c:'#F67900',bg:'#FFF4EA',t:'관심'} };
+const ZONE={ good:{c:'#12BA7E',bg:'#E9FBF5',t:'좋음'}, mid:{c:'#E3A700',bg:'#FFF8D8',t:'보통'}, watch:{c:'#F67900',bg:'#FFF4EA',t:'주의'} };
 const FZONE={ good:'#12BA7E', mid:'#E3A700', warn:'#F67900' };
 const zoneScore={ good:88, mid:62, watch:42 };
 const zoneRank={ watch:0, mid:1, good:2 };
@@ -718,7 +716,7 @@ function showResult(){ const svc=S.chosen; let idx;
   showPage('report'); go('s-result'); }
 function showPage(p){ document.getElementById('page-report').classList.toggle('on', p==='report'); document.getElementById('page-solution').classList.toggle('on', p==='solution'); resetIdle(); }
 const won=n=>n.toLocaleString('ko-KR')+'원';
-function prodCard(p){ return `<div class="prod"><img class="pimg" src="${p[0].img}" alt=""><div class="pbody"><div class="prank">${p[1]}</div><div class="pnm">${p[0].n}</div><div class="pk">${p[0].key}</div><div class="pprice"><s>${won(p[0].orig)}</s>${won(p[0].price)}</div></div></div>`; }
+function prodCard(p){ return `<div class="prod"><img class="pimg" src="${p[0].img}" alt=""><div class="pbody"><div class="prank">${p[1]}</div><div class="pnm">${p[0].n}</div><div class="pk">${p[0].key}</div></div></div>`; }
 function mealCard(m){ return `<div class="meal"><img class="mimg" src="${m.img}" alt=""><div class="mbody"><span class="mtag">${m.tag}</span><div class="mnm">${m.n}</div><div class="mnut"><span><b>${m.cal}</b>kcal</span><span>단백 <b>${m.pro}</b>g</span></div></div></div>`; }
 function chip(name,color){ return `<div class="foodchip"><span class="g" style="background:${color}"></span>${name}</div>`; }
 function shade(hex){ const n=parseInt(hex.slice(1),16); let r=Math.max(0,(n>>16)-26),g=Math.max(0,((n>>8)&255)-26),b=Math.max(0,(n&255)-26); return '#'+((r<<16)|(g<<8)|b).toString(16).padStart(6,'0'); }
@@ -750,7 +748,7 @@ function renderIgg(d){
       <div class="swaps">${d.swaps.map(s=>`<div class="swap"><span class="from">${s[0]}</span><span class="arw">→</span><span class="to">${s[1]}</span></div>`).join('')}</div></div>
     <div class="card"><div class="ct">💊 ${d.typeName} 맞춤 영양제</div><div class="prod-row">${d.prods.map(prodCard).join('')}</div></div>
     <div class="card"><div class="ct">🍱 내 몸에 맞는 도시락</div><div class="meal-row">${d.meals.map(mealCard).join('')}</div></div>
-    <div class="card"><div class="ct">🎁 한 번에 챙기는 케어 세트</div><div class="careset"><div class="cs-l"><div class="cs-t">${d.typeName}을 위해 한 번에 챙기기</div><div class="cs-p"><s>${won(d.setOrig)}</s>${won(d.setPrice)}</div></div><div style="font-size:56px">🛒</div></div>${tipLine}</div>
+    <div class="card"><div class="ct">🎁 한 번에 챙기는 케어 세트</div><div class="careset"><div class="cs-l"><div class="cs-t">${d.typeName}을 위해 한 번에 챙기기</div><div class="cs-desc">${d.setDesc}</div></div><div style="font-size:56px">🛒</div></div>${tipLine}</div>
     <button class="rpage-nav go-rep" onclick="showPage('report')">← 다시 내 리포트 확인하기</button>`;
 }
 
@@ -762,8 +760,8 @@ function renderCmfa(d){
       <div class="thmascot">${d.mascot}</div><div class="thbody"><div class="thno">종합 대사기능 · 6가지 밸런스</div><div class="thname">컨디션 밸런스</div>${(SYMPTOM[S.symptom]&&SYMPTOM[S.symptom].short)?`<div class="sym-chip">🩺 요즘 신경 쓰이는 것 · ${SYMPTOM[S.symptom].short}</div>`:`<div class="thcatch">챙길 항목부터\n건강한 항목까지 한눈에</div>`}</div></div>
     <div class="card"><div class="ct">📡 6가지 밸런스 레이더</div>
       <div class="radar-wrap">${radarSVG(d.zones)}
-        <div class="radar-legend"><span><i style="background:${ZONE.good.c}"></i>좋음</span><span><i style="background:${ZONE.mid.c}"></i>보통</span><span><i style="background:${ZONE.watch.c}"></i>관심</span></div></div></div>
-    <div class="card"><div class="ct">📊 항목별 순위 (관심부터)</div>
+        <div class="radar-legend"><span><i style="background:${ZONE.good.c}"></i>좋음</span><span><i style="background:${ZONE.mid.c}"></i>보통</span><span><i style="background:${ZONE.watch.c}"></i>주의</span></div></div></div>
+    <div class="card"><div class="ct">📊 항목별 순위 (주의부터)</div>
       <div class="axis-list">${ranked.map(r=>{ const z=ZONE[r.zone]; return `<div class="axis-row"><span class="adot" style="background:${z.c}"></span><span class="an">${r.name}</span><span class="anote">${noteOf(r.zone)}</span><span class="az" style="color:${z.c}; background:${z.bg}">${z.t}</span></div>`; }).join('')}</div></div>
     <button class="rpage-nav go-sol" onclick="showPage('solution')">💡 이제 맞춤 솔루션 보기 →</button>`;
   const rc=['#F67900','#F79A3D','#E3A700'];
@@ -773,7 +771,7 @@ function renderCmfa(d){
     <div class="card"><div class="ct">💊 맞춤 케어 영양제</div><div class="prod-row">${d.prods.map((p,i)=>prodCard([p[0],'추천 '+(i+1)])).join('')}</div></div>
     <div class="card"><div class="ct">🍱 추천 도시락 · 습관</div><div class="meal-row">${mealCard(d.meal)}</div>
       <div class="swaps" style="margin-top:14px"><div class="swap"><span class="arw">🍚 식단</span><span class="to">${d.diet}</span></div><div class="swap"><span class="arw">🏃 습관</span><span class="to">${d.life}</span></div></div></div>
-    <div class="card"><div class="ct">🎁 한 번에 챙기는 케어 세트</div><div class="careset"><div class="cs-l"><div class="cs-t">${d.focus} 집중 케어</div><div class="cs-p"><s>${won(d.setOrig)}</s>${won(d.setPrice)}</div></div><div style="font-size:56px">🛒</div></div></div>
+    <div class="card"><div class="ct">🎁 한 번에 챙기는 케어 세트</div><div class="careset"><div class="cs-l"><div class="cs-t">${d.focus} 집중 케어</div><div class="cs-desc">${d.setDesc}</div></div><div style="font-size:56px">🛒</div></div></div>
     <button class="rpage-nav go-rep" onclick="showPage('report')">← 다시 내 리포트 확인하기</button>`;
 }
 function radarSVG(zones){ const cx=210,cy=190,R=140,N=6;
