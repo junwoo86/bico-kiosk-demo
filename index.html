@@ -48,13 +48,16 @@ html,body{margin:0; height:100%; background:#0a1414; overflow:hidden;
 .stepper .dot{width:64px; height:8px; border-radius:4px; background:var(--n-100); transition:.3s;}
 .stepper .dot.on{background:var(--mint); box-shadow:0 0 0 4px var(--mint-50);}
 
-/* 처음으로 — 우하단 독립 고정(모든 화면 공통, 표준 버튼 높이) */
-.homebtn{position:absolute; right:44px; bottom:44px; z-index:67; width:250px; height:var(--btnH); border-radius:28px;
-  border:2.5px solid var(--mint); background:#fff; color:var(--mint-600); font-size:34px; font-weight:800;
-  display:flex; align-items:center; justify-content:center; gap:12px; box-shadow:var(--shadow-sm); letter-spacing:-.02em;}
-.homebtn:active{background:var(--mint-50); transform:scale(.97);}
+/* 우하단 내비 — [뒤로][처음] 나란히 (모든 화면 공통, 표준 버튼 높이) */
+.botnav{position:absolute; right:44px; bottom:44px; z-index:67; display:flex; gap:18px; align-items:flex-end;}
+.navbtn{height:var(--btnH); border-radius:28px; background:#fff; font-weight:800; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:var(--shadow-sm); letter-spacing:-.02em;}
+.navbtn:active{transform:scale(.97);}
+.navbtn.back{width:168px; border:2.5px solid var(--n-200); color:var(--n-600); font-size:32px;}
+.navbtn.back:active{background:var(--n-50);}
+.navbtn.home{width:132px; border:2.5px solid var(--mint); color:var(--mint-600); font-size:32px;}
+.navbtn.home:active{background:var(--mint-50);}
 /* 결과 화면 부스 CTA — 하단 좌측(처음으로 자리 비워둠), 같은 높이로 나란히 */
-.booth-cta{position:absolute; left:44px; bottom:44px; width:calc(100% - 378px); z-index:66;}
+.booth-cta{position:absolute; left:44px; bottom:44px; width:calc(100% - 426px); z-index:66;}
 .booth-cta .bcta-mini{font-size:22px; color:var(--gold); font-weight:700; margin-bottom:12px; text-align:center;}
 .booth-cta .bcta-btn{height:var(--btnH); font-size:33px; width:100%;}
 
@@ -176,9 +179,14 @@ h1{font-size:58px; line-height:1.16; margin:0 0 10px; letter-spacing:-.035em; fo
 
 /* ============ 리포트 / 솔루션 ============ */
 #s-result{padding:96px 40px 190px;}
-.result-tabs{display:flex; gap:10px; background:#fff; border:2px solid var(--line); border-radius:22px; padding:7px; margin-bottom:18px; box-shadow:var(--shadow-sm); flex-shrink:0;}
-.result-tabs button{flex:1; height:72px; border:none; border-radius:15px; background:transparent; color:var(--n-500); font-size:28px; font-weight:800; font-family:inherit; letter-spacing:-.02em;}
-.result-tabs button.on{background:linear-gradient(120deg,var(--mint),#17B3AD); color:#fff;}
+/* 탭 — 두 개의 누를 수 있는 페이지로 명확히(비활성=테두리+펄스+힌트, 활성=채움+돌출) */
+.result-tabs{display:flex; gap:14px; margin-bottom:14px; flex-shrink:0; align-items:flex-end;}
+.result-tabs button{flex:1; height:80px; border:2.5px solid var(--n-200); border-radius:20px; background:var(--n-50); color:var(--n-500); font-size:27px; font-weight:800; font-family:inherit; letter-spacing:-.02em; display:flex; align-items:center; justify-content:center; gap:10px; transition:all .18s; position:relative;}
+.result-tabs button.on{background:linear-gradient(120deg,var(--mint),#17B3AD); color:#fff; border-color:var(--mint); box-shadow:0 10px 22px rgba(34,195,188,.32); transform:translateY(-2px); height:88px;}
+.result-tabs button:not(.on){animation:tabpulse 1.8s ease-in-out infinite;}
+@keyframes tabpulse{0%,100%{box-shadow:0 0 0 0 rgba(34,195,188,0);} 50%{box-shadow:0 0 0 8px rgba(34,195,188,.12);}}
+.tabhint{font-size:18px; font-weight:800; color:var(--mint-600); background:#fff; padding:5px 12px; border-radius:12px; box-shadow:var(--shadow-sm); white-space:nowrap;}
+.result-tabs button.on .tabhint{display:none;}
 .rpages{flex:1; overflow:hidden;}
 .rpage{display:none; height:100%;} .rpage.on{display:block; animation:fade .35s;}
 .card{background:#fff; border:1px solid var(--line); border-radius:24px; padding:24px 26px; margin-bottom:16px; box-shadow:var(--shadow-sm);}
@@ -285,7 +293,7 @@ svg.radar{width:440px; height:380px; flex-shrink:0; display:block; margin:0 auto
     </div>
     <div class="promo-band"><div class="pc" id="homeCap">먹는 것부터 대사 밸런스까지,<br>데이터로 나를 봅니다</div></div>
     <div class="home-bottom">
-      <div class="kick">✨ 부스에서 직접, 1분이면 충분해요.</div>
+      <div class="kick">✨ 여기서 직접, 1분이면 충분해요.</div>
       <h1>내 분석 받아보세요</h1>
       <div class="cat-scan">
         <img class="mascot" src="assets/brand/mascot-cat.png" alt="bico">
@@ -353,8 +361,8 @@ svg.radar{width:440px; height:380px; flex-shrink:0; display:block; margin:0 auto
   <!-- 리포트/솔루션 -->
   <section class="screen" id="s-result">
     <div class="result-tabs">
-      <button id="tabReport" class="on" onclick="showPage('report')">📄 내 리포트</button>
-      <button id="tabSolution" onclick="showPage('solution')">💡 맞춤 솔루션</button>
+      <button id="tabReport" class="on" onclick="showPage('report')">📄 내 리포트<span class="tabhint">👆 눌러보기</span></button>
+      <button id="tabSolution" onclick="showPage('solution')">💡 맞춤 솔루션<span class="tabhint">👆 눌러보기</span></button>
     </div>
     <div class="rpages"><div class="rpage on" id="page-report"></div><div class="rpage" id="page-solution"></div></div>
   </section>
@@ -376,8 +384,11 @@ svg.radar{width:440px; height:380px; flex-shrink:0; display:block; margin:0 auto
     </div>
   </section>
 
-  <!-- 처음으로(우하단 독립) + 결과화면 부스 CTA(하단 좌측, 나란히) -->
-  <button class="homebtn hidden" id="homeBtn" onclick="goHome()">🏠 처음으로</button>
+  <!-- 우하단 내비([뒤로][처음]) + 결과화면 부스 CTA(하단 좌측) -->
+  <div class="botnav">
+    <button class="navbtn back hidden" id="backBtn" onclick="goBack()">← 뒤로</button>
+    <button class="navbtn home hidden" id="homeBtn" onclick="goHome()">🏠 홈</button>
+  </div>
   <div class="booth-cta hidden" id="boothCta">
     <button class="btn btn-primary bcta-btn" onclick="go('s-benefit')">☕ 앱 설치 안내받고, 커피 받기 (부스로)</button>
   </div>
@@ -539,7 +550,8 @@ function go(id){
   SCREENS.forEach(s=>document.getElementById(s).classList.toggle('active', s===id));
   current=id;
   const stepper=document.getElementById('stepper');
-  document.getElementById('homeBtn').classList.toggle('hidden', id==='s-home');   // 처음으로: 홈 제외 전 화면 우하단
+  document.getElementById('homeBtn').classList.toggle('hidden', id==='s-home');   // 처음: 홈 제외 전 화면
+  document.getElementById('backBtn').classList.toggle('hidden', id==='s-home');   // 뒤로: 홈 제외 전 화면
   document.getElementById('boothCta').classList.toggle('hidden', id!=='s-result'); // 부스 CTA: 결과 화면만
   if(id==='s-needs'){ renderStepper(1); stepper.classList.remove('hidden'); }
   else if(id==='s-q'){ renderStepper(2+S.qi); stepper.classList.remove('hidden'); }
@@ -553,7 +565,49 @@ let capI=0; setInterval(()=>{ if(current==='s-home'){ capI=(capI+1)%CAPS.length;
 
 /* ===== 플로우 ===== */
 function startFlow(){ resetSession(); enterNeeds(); }
-function goHome(){ resetSession(); go('s-home'); }
+function goHome(){ clearTimeout(S.scanTimer); clearInterval(S.fillIv); resetSession(); go('s-home'); }
+
+/* 뒤로가기 — 화면별 논리적 이전 단계 */
+function goBack(){
+  clearTimeout(S.scanTimer); clearInterval(S.fillIv);
+  switch(current){
+    case 's-needs':    goHome(); break;
+    case 's-q':        qPrev(); break;                 // 문항 단위 되돌리기(점수 복원)
+    case 's-select':   backToQuestions(); break;       // 마지막 문항으로
+    case 's-specimen': showSelectResolved(); break;    // 분석 추천 화면으로
+    case 's-scan':     startSpecimen(S.chosen); break; // 검체 화면으로
+    case 's-result':   showSelectResolved(); break;    // 분석 추천 화면으로
+    case 's-benefit':  go('s-result'); break;          // 결과로
+    default:           goHome();
+  }
+}
+function backToQuestions(){   // 선택 화면 → 마지막 문항(q3) 다시
+  const last=S.answers.pop();
+  if(last){ const q=BRANCH[S.branch].qs[last.qi], o=q.opts[last.i]; S.a-=o.a; S.b-=o.b; if(q.persona==='igg') S.iggPersona=null; if(q.persona==='cmfa') S.cmfaPersona=null; }
+  S.qi=2; renderQ(); go('s-q');
+}
+function qPrev(){   // 문항 화면 → 이전 문항(점수·페르소나 복원), 첫 문항이면 니즈로
+  if(S.qi>0){
+    const last=S.answers.pop();
+    if(last){ const q=BRANCH[S.branch].qs[last.qi], o=q.opts[last.i]; S.a-=o.a; S.b-=o.b; if(q.persona==='igg') S.iggPersona=null; if(q.persona==='cmfa') S.cmfaPersona=null; }
+    S.qi--; renderQ();
+  } else { enterNeeds(); }
+}
+function showSelectResolved(){  // 스핀 없이 추천 결과 상태로 즉시 표시(뒤로 복귀용)
+  const reco=S.recoSvc; if(!reco){ toSelect(); return; }
+  go('s-select');
+  const track=document.getElementById('spinTrack'), result=document.getElementById('spinResult');
+  const recoIdx=SERVICES.findIndex(s=>s.svc===reco);
+  let html=''; for(let l=0;l<7;l++){ SERVICES.forEach(s=>html+=spinCardHTML(s)); } track.innerHTML=html;
+  const cards=track.children, targetIndex=5*SERVICES.length+recoIdx;
+  const vw=document.querySelector('.spinner').clientWidth, tc=cards[targetIndex];
+  const targetX=Math.round(vw/2-(tc.offsetLeft+tc.offsetWidth/2));
+  track.style.transition='none'; track.style.transform='translate('+targetX+'px, -50%)';
+  [...cards].forEach((c,idx)=>c.classList.toggle('on', idx===targetIndex));
+  document.getElementById('spinName').textContent=SERVICES[recoIdx].n;
+  document.getElementById('spinMini').textContent = reco==='igg' ? '손끝 피 한 방울로 나와 맞는 음식을 알아봐요' : '간단한 검사 한 번으로 6가지 몸 밸런스를 알아봐요';
+  result.classList.add('show');
+}
 function enterNeeds(){ const box=document.getElementById('needsChoices'); box.innerHTML='';
   NEEDS.opts.forEach((o,i)=>{ const el=div('choice'); el.innerHTML=`<div class="emo">${o.emo}</div><div>${o.label}</div><div class="chev">›</div>`; el.onclick=()=>pickNeeds(i); box.appendChild(el); });
   go('s-needs'); }
@@ -605,11 +659,11 @@ function startSpecimen(svc){ S.chosen=svc; const stage=document.getElementById('
   document.getElementById('specBtn').style.display=''; go('s-specimen'); }
 function collectSpecimen(){ document.getElementById('specBtn').style.display='none';
   if(S.chosen==='igg'){ document.getElementById('drop').classList.add('fall'); let f=0; const fill=document.getElementById('dbsFill');
-    setTimeout(()=>{ const iv=setInterval(()=>{ f+=0.045; fill.style.transform='translate(-50%,-50%) scale('+Math.min(f,1)+')'; if(f>=1){ clearInterval(iv); setTimeout(startScan,500);} },40); },900);
-  }else{ let f=0; const liq=document.getElementById('tubeLiquid'); const iv=setInterval(()=>{ f+=3; liq.style.height=Math.min(f,90)+'%'; if(f>=90){ clearInterval(iv); setTimeout(startScan,600);} },70); } }
+    setTimeout(()=>{ S.fillIv=setInterval(()=>{ f+=0.045; fill.style.transform='translate(-50%,-50%) scale('+Math.min(f,1)+')'; if(f>=1){ clearInterval(S.fillIv); setTimeout(startScan,500);} },40); },900);
+  }else{ let f=0; const liq=document.getElementById('tubeLiquid'); S.fillIv=setInterval(()=>{ f+=3; liq.style.height=Math.min(f,90)+'%'; if(f>=90){ clearInterval(S.fillIv); setTimeout(startScan,600);} },70); } }
 
 /* 스캔 */
-function startScan(){ go('s-scan'); attachScanCam(); const l=document.getElementById('laser'); l.classList.remove('run'); void l.offsetWidth; l.classList.add('run'); setTimeout(showResult, CFG.SCAN_MS); }
+function startScan(){ go('s-scan'); attachScanCam(); const l=document.getElementById('laser'); l.classList.remove('run'); void l.offsetWidth; l.classList.add('run'); S.scanTimer=setTimeout(showResult, CFG.SCAN_MS); }
 
 /* 결과 */
 function showResult(){ const svc=S.chosen; let idx;
