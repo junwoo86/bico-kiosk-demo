@@ -198,13 +198,22 @@ h1{font-size:58px; line-height:1.16; margin:0 0 10px; letter-spacing:-.035em; fo
 .type-hero .thno{font-size:23px; font-weight:700; opacity:.9;}
 .type-hero .thname{font-size:44px; font-weight:800; letter-spacing:-.03em; margin:2px 0 6px;}
 .type-hero .thcatch{font-size:25px; opacity:.95; line-height:1.32; font-weight:600; white-space:pre-line;}
+.type-hero .thbody{min-width:0;}
+.sym-chip{display:inline-block; margin-top:8px; font-size:23px; font-weight:800; color:#fff; background:rgba(255,255,255,.22); padding:8px 18px; border-radius:16px;}
+/* IgG 단계 카드(4칸) */
+.lvl-card{background:#fff; border:1px solid var(--line); border-radius:22px; padding:18px 22px; margin-bottom:14px; box-shadow:var(--shadow-sm);}
+.lvl-head{display:flex; align-items:center; gap:12px; margin-bottom:12px;}
+.lvl-badge{font-size:26px; font-weight:800; padding:6px 16px; border-radius:14px; letter-spacing:-.02em; flex-shrink:0;}
+.lvl-tag{font-size:24px; font-weight:700; letter-spacing:-.02em;} .lvl-tag b{font-weight:800;}
+.lvl-cnt{margin-left:auto; font-size:23px; font-weight:800; color:var(--n-500); flex-shrink:0;}
+.lvl-empty{font-size:23px; color:var(--good); font-weight:600;}
 
 /* IgG 음식 요약 */
 .zone-summary{display:flex; gap:14px;}
 .zone-pill{flex:1; border-radius:20px; padding:18px 14px; text-align:center; border:2px solid;}
 .zone-pill .zn{font-size:24px; font-weight:800;} .zone-pill .zc{font-size:42px; font-weight:800; line-height:1.05;} .zone-pill .zu{font-size:19px; font-weight:700; opacity:.7;}
 .foodchips{display:flex; flex-wrap:wrap; gap:11px;}
-.foodchip{display:flex; align-items:center; gap:9px; padding:13px 22px; border-radius:18px; font-size:27px; font-weight:700; border:2px solid var(--line); background:#fff;}
+.foodchip{display:flex; align-items:center; gap:8px; padding:10px 16px; border-radius:16px; font-size:23px; font-weight:700; border:1.5px solid var(--line); background:#fff;}
 .foodchip .g{width:16px; height:16px; border-radius:50%; flex-shrink:0;}
 .subhead{font-size:23px; font-weight:800; color:var(--n-700); margin:16px 0 10px; display:flex; align-items:center; gap:8px;}
 
@@ -438,24 +447,40 @@ const SERVICES=[
 ];
 
 /* ===== 시나리오 더미(공식 IgG 매핑) ===== */
+/* IgG 반응 단계 4칸(5/4/3/1~2) — 실제 바이오컴 리포트 결과해석을 짧은 태그로 요약 */
+const IGG_LEVELS=[
+  { key:5, label:'5단계', tag:'섭취 배제', hint:'완전히 빼기', color:'#D92020', bg:'#FFE9E9' },
+  { key:4, label:'4단계', tag:'섭취 제한', hint:'6개월 이상 끊기', color:'#F04545', bg:'#FFECEC' },
+  { key:3, label:'3단계', tag:'섭취 주의', hint:'소량·가끔만', color:'#F67900', bg:'#FFF4EA' },
+  { key:12, label:'1~2단계', tag:'섭취 가능', hint:'편하게 OK', color:'#12BA7E', bg:'#E9FBF5' },
+];
+/* 증상 문진(Q3) — 실제 앱 사전문진 문항 기반. 리포트/솔루션을 개인화 */
+const SYMPTOM={
+  gut:{ short:'속 더부룩·가스', call:'식사 후 속이 자주 불편하다면, 아래 주의 음식을 줄이며 편안함이 달라지는지 살펴보세요.', tip:'규칙적인 식사와 발효식으로 속 편한 리듬 만들기' },
+  skin:{ short:'피부 트러블·가려움', call:'피부가 예민해졌다면, 지연성 반응이 있는 음식을 줄이며 피부 변화를 관찰해 보세요.', tip:'자극 줄이고 항염 식단으로 피부 진정 돕기' },
+  fatigue:{ short:'졸림·피로', call:'이유 없는 피로엔, 매일 먹던 주의 음식을 잠시 쉬어보는 것도 도움돼요.', tip:'점심 저GI·오후 리듬으로 컨디션 회복' },
+  immune:{ short:'콧물·환절기 감기', call:'환절기 콧물·코막힘이 잦다면, 과민 음식을 줄여 면역 밸런스를 살펴보세요.', tip:'과민 음식 줄이고 면역·장 밸런스 챙기기' },
+  none:{ short:'', call:'', tip:'' },
+};
+/* 각 유형 더미 — 한국인 상용 재료 20여종(고기 포함)을 단계(1~5)별로 배치. 4~5단계 = 회피 대상 */
 const DUMMY_IGG=[
   { key:'IMMUNE', mascot:'🦔', typeNo:'2유형', typeName:'면역 과민 반응형', catch:'면역 시스템의\n밸런스를 찾아야 해요.', color:'#7C5CFF',
-    zones:{good:9,mid:3,warn:4}, warn:['우유','체다치즈','요거트','달걀흰자'], mid:['버터','새우','게'], good:['현미','브로콜리','닭가슴살','고구마'],
-    swaps:[['우유·요거트','식물성 음료'],['체다치즈','두부·식물성 치즈']],
+    foods:[['우유',5],['체다치즈',5],['요거트',4],['버터',4],['달걀흰자',4],['새우',3],['소고기',3],['효모',3],['밀',2],['돼지고기',2],['바나나',2],['고등어',2],['쌀',1],['현미',1],['닭고기',1],['브로콜리',1],['양배추',1],['사과',1],['두부',1],['마늘',1],['양파',1]],
+    swaps:[['우유·요거트','식물성 음료(귀리·아몬드유)'],['체다치즈','두부·식물성 치즈']],
     prods:[[SUP.darae,'추천 1순위'],[SUP.bio,'추천 2순위'],[SUP.clean,'추천 3순위']], meals:[MEAL.samgye,MEAL.salmon],
     routine:'유제품을 2주만 줄이고 속 편안함·피부 컨디션 변화를 체크해 보세요.', setPrice:156400, setOrig:255000 },
   { key:'GUT', mascot:'🐧', typeNo:'1유형', typeName:'장 건강 저하형', catch:'장속 가스 폭풍을\n잔잔 모드로 돌려야 해요.', color:'#12A09A',
-    zones:{good:8,mid:4,warn:4}, warn:['밀','통밀','보리','효모'], mid:['호밀','귀리','옥수수','당면'], good:['쌀','감자','당근','두부'],
-    swaps:[['밀가루 면·빵','쌀·두부면·글루텐프리'],['보리차','옥수수차·루이보스']],
+    foods:[['밀',5],['통밀',4],['보리',4],['효모',4],['옥수수',3],['귀리',3],['메밀',3],['대두',2],['우유',2],['달걀노른자',2],['쌀',1],['감자',1],['고구마',1],['닭고기',1],['돼지고기',1],['소고기',1],['두부',1],['당근',1],['브로콜리',1],['사과',1],['연어',1]],
+    swaps:[['밀가루 면·빵','쌀·두부면·글루텐프리'],['보리차','루이보스·옥수수차']],
     prods:[[SUP.bio,'추천 1순위'],[SUP.clean,'추천 2순위'],[SUP.reset,'조건부 · 글루텐']], meals:[MEAL.galbi,MEAL.beef],
     routine:'‘글루텐 프리 리셋데이’를 주 2회 정해 4주 체험 후 컨디션을 비교해 보세요.', setPrice:147800, setOrig:235000 },
   { key:'SKIN', mascot:'🦊', typeNo:'5유형', typeName:'염증형', catch:'몸속 불씨를\n진정 모드로 돌려야 해요.', color:'#F04545',
-    zones:{good:10,mid:2,warn:4}, warn:['아몬드','달걀노른자','땅콩','캐슈넛'], mid:['호두','잣'], good:['쌀','닭고기','양배추','블루베리'],
+    foods:[['아몬드',5],['달걀노른자',5],['땅콩',4],['캐슈넛',4],['달걀흰자',4],['호두',3],['참깨',3],['새우',3],['밀',2],['우유',2],['돼지고기',2],['쌀',1],['닭고기',1],['소고기',1],['양배추',1],['사과',1],['대구',1],['두부',1],['마늘',1],['양파',1],['바나나',1]],
     swaps:[['아몬드·캐슈넛','호박씨·해바라기씨'],['달걀 요리','두부 스크램블']],
     prods:[[SUP.bio,'추천 1순위'],[SUP.clean,'추천 2순위'],[SUP.young,'추천 3순위']], meals:[MEAL.salmon,MEAL.cod],
     routine:'견과·달걀을 2주 줄이고 피부 트러블·컨디션 변화를 기록해 보세요.', setPrice:124000, setOrig:180000 },
   { key:'META', mascot:'🐻‍❄️', typeNo:'4유형', typeName:'대사 저하형', catch:'저전력 모드를\n체계적으로 관리해야 해요.', color:'#157D78',
-    zones:{good:13,mid:5,warn:0}, warnMild:true, warn:[], mid:['달걀흰자','우유','대두','새우','밀'], good:['쌀','닭가슴살','브로콜리','고구마'],
+    foods:[['달걀흰자',4],['우유',4],['대두',3],['새우',3],['밀',3],['효모',3],['돼지고기',2],['소고기',2],['고등어',2],['바나나',2],['쌀',1],['닭가슴살',1],['현미',1],['브로콜리',1],['고구마',1],['사과',1],['양배추',1],['두부',1],['당근',1],['마늘',1],['양파',1]],
     swaps:[['우유','식물성 우유'],['대두 단백','완두·쌀 단백']],
     prods:[[SUP.dang,'추천 1순위'],[SUP.neuro,'추천 2순위'],[SUP.bio,'추천 3순위']], meals:[MEAL.beef,MEAL.jeyuk],
     routine:'특정 음식을 끊기보다, 골고루 먹으며 대사 밸런스를 챙기는 데 집중해 보세요.', setPrice:133800, setOrig:220000 },
@@ -487,6 +512,12 @@ const NEEDS={ opts:[
   {emo:'⚡',label:'에너지 · 컨디션 · 밸런스',branch:'B',a:0,b:2},
   {emo:'🤩',label:'다 궁금해요!',branch:'Both',a:0,b:0},
 ]};
+/* Q3 = 실제 증상 문진(앱 사전문진 기반) — 결과를 개인화 */
+const SYMPTOM_Q3={ t:'요즘, 이런 몸신호가 있어요?', persona:'symptom', opts:[
+  {emo:'🤢',label:'식사 후 자주 더부룩·가스',a:0,b:0,sym:'gut'},
+  {emo:'🌡️',label:'피부가 가렵거나 뾰루지',a:0,b:0,sym:'skin'},
+  {emo:'😮‍💨',label:'점심 뒤 졸리고 자주 피곤',a:0,b:0,sym:'fatigue'},
+  {emo:'🤧',label:'콧물·코막힘·환절기 감기',a:0,b:0,sym:'immune'} ]};
 const BRANCH={
   A:{ kicker:'🍽️ 먹는 것 · 속 편함', qs:[
     { t:'요즘 내 식탁, 어떤 그림에 가까워요?', opts:[
@@ -495,9 +526,7 @@ const BRANCH={
     { t:"나와 '잘 맞는지' 궁금한 음식은?", persona:'igg', opts:[
       {emo:'🧀',label:'우유·치즈·유제품',a:2,b:0,igg:0},{emo:'🍞',label:'빵·면·밀가루',a:2,b:0,igg:1},
       {emo:'🥜',label:'견과·달걀',a:2,b:0,igg:2},{emo:'🙆',label:'딱히 없어요 · 다 잘 먹어요',a:0,b:1,igg:3} ]},
-    { t:'다음 중 제일 반가운 결과지는?', opts:[
-      {emo:'🚫',label:'나와 안 맞는 음식 리스트',a:2,b:0},{emo:'🥗',label:'몸에 맞는 대체 식단',a:2,b:0},
-      {emo:'📡',label:'6가지 밸런스 레이더',a:0,b:2},{emo:'🗺️',label:'우선순위 케어 로드맵',a:0,b:2} ]},
+    SYMPTOM_Q3,
   ]},
   B:{ kicker:'⚡ 에너지 · 컨디션', qs:[
     { t:'아침에 눈 떴을 때, 나는?', opts:[
@@ -506,9 +535,7 @@ const BRANCH={
     { t:'요즘 가장 아쉬운 컨디션은?', persona:'cmfa', opts:[
       {emo:'😴',label:'잠·집중·멍함',a:0,b:2,cmfa:0},{emo:'🌀',label:'소화·속 더부룩',a:1,b:1,cmfa:1},
       {emo:'⚖️',label:'체중·붓기·군살',a:0,b:2,cmfa:2},{emo:'🔋',label:'활력·회복·피부칙칙',a:0,b:2,cmfa:3} ]},
-    { t:'결과지에서 먼저 보고 싶은 건?', opts:[
-      {emo:'🚫',label:'나와 안 맞는 음식 리스트',a:2,b:0},{emo:'📡',label:'6가지 밸런스 레이더',a:0,b:2},
-      {emo:'⏰',label:'에너지·집중 루틴',a:0,b:2},{emo:'🌿',label:'속 편하게 먹는 법',a:1,b:1} ]},
+    SYMPTOM_Q3,
   ]},
   Both:{ kicker:'🤩 다 궁금해요', qs:[
     { t:"나와 '잘 맞는지' 궁금한 음식은?", persona:'igg', opts:[
@@ -517,9 +544,7 @@ const BRANCH={
     { t:'요즘 가장 아쉬운 컨디션은?', persona:'cmfa', opts:[
       {emo:'😴',label:'잠·집중·멍함',a:0,b:2,cmfa:0},{emo:'🌀',label:'소화·속 더부룩',a:1,b:1,cmfa:1},
       {emo:'⚖️',label:'체중·붓기·군살',a:0,b:2,cmfa:2},{emo:'🔋',label:'활력·회복·피부칙칙',a:0,b:2,cmfa:3} ]},
-    { t:'이런 결과지 받으면 신나요!', opts:[
-      {emo:'🍽️',label:'나만의 음식 궁합표',a:2,b:0},{emo:'📊',label:'종합 밸런스 레이더',a:0,b:2},
-      {emo:'🚫',label:'피해야 할 음식 순위',a:2,b:0},{emo:'🗺️',label:'우선순위 케어 로드맵',a:0,b:2} ]},
+    SYMPTOM_Q3,
   ]},
 };
 const ZONE={ good:{c:'#12BA7E',bg:'#E9FBF5',t:'좋음'}, mid:{c:'#E3A700',bg:'#FFF8D8',t:'보통'}, watch:{c:'#F67900',bg:'#FFF4EA',t:'관심'} };
@@ -529,7 +554,7 @@ const zoneRank={ watch:0, mid:1, good:2 };
 
 /* ===== 세션 ===== */
 let S={};
-function resetSession(){ S={ branch:null, qi:0, a:0, b:0, iggPersona:null, cmfaPersona:null, recoSvc:null, chosen:null, shownIgg:false, shownCmfa:false, answers:[] }; }
+function resetSession(){ S={ branch:null, qi:0, a:0, b:0, iggPersona:null, cmfaPersona:null, symptom:null, recoSvc:null, chosen:null, shownIgg:false, shownCmfa:false, answers:[] }; }
 resetSession();
 function getIdx(svc){ try{ return parseInt(localStorage.getItem('biocom_'+svc+'_idx')||'0',10)%4; }catch(e){ return (window.__m&&window.__m[svc])||0; } }
 function bumpIdx(svc){ const nx=(getIdx(svc)+1)%4; try{ localStorage.setItem('biocom_'+svc+'_idx',String(nx)); }catch(e){ window.__m=window.__m||{}; window.__m[svc]=nx; } }
@@ -583,13 +608,13 @@ function goBack(){
 }
 function backToQuestions(){   // 선택 화면 → 마지막 문항(q3) 다시
   const last=S.answers.pop();
-  if(last){ const q=BRANCH[S.branch].qs[last.qi], o=q.opts[last.i]; S.a-=o.a; S.b-=o.b; if(q.persona==='igg') S.iggPersona=null; if(q.persona==='cmfa') S.cmfaPersona=null; }
+  if(last){ const q=BRANCH[S.branch].qs[last.qi], o=q.opts[last.i]; S.a-=o.a; S.b-=o.b; if(q.persona==='igg') S.iggPersona=null; if(q.persona==='cmfa') S.cmfaPersona=null; if(q.persona==='symptom') S.symptom=null; }
   S.qi=2; renderQ(); go('s-q');
 }
 function qPrev(){   // 문항 화면 → 이전 문항(점수·페르소나 복원), 첫 문항이면 니즈로
   if(S.qi>0){
     const last=S.answers.pop();
-    if(last){ const q=BRANCH[S.branch].qs[last.qi], o=q.opts[last.i]; S.a-=o.a; S.b-=o.b; if(q.persona==='igg') S.iggPersona=null; if(q.persona==='cmfa') S.cmfaPersona=null; }
+    if(last){ const q=BRANCH[S.branch].qs[last.qi], o=q.opts[last.i]; S.a-=o.a; S.b-=o.b; if(q.persona==='igg') S.iggPersona=null; if(q.persona==='cmfa') S.cmfaPersona=null; if(q.persona==='symptom') S.symptom=null; }
     S.qi--; renderQ();
   } else { enterNeeds(); }
 }
@@ -619,7 +644,7 @@ function renderQ(){ const br=BRANCH[S.branch], q=br.qs[S.qi];
   q.opts.forEach((o,i)=>{ const el=div('choice'); el.innerHTML=`<div class="emo">${o.emo}</div><div>${o.label}</div><div class="chev">›</div>`; el.onclick=()=>pickQ(i); box.appendChild(el); });
   renderStepper(2+S.qi); }
 function pickQ(i){ const q=BRANCH[S.branch].qs[S.qi], o=q.opts[i]; S.a+=o.a; S.b+=o.b;
-  if(q.persona==='igg'&&o.igg!=null) S.iggPersona=o.igg; if(q.persona==='cmfa'&&o.cmfa!=null) S.cmfaPersona=o.cmfa;
+  if(q.persona==='igg'&&o.igg!=null) S.iggPersona=o.igg; if(q.persona==='cmfa'&&o.cmfa!=null) S.cmfaPersona=o.cmfa; if(q.persona==='symptom'&&o.sym) S.symptom=o.sym;
   S.answers.push({qi:S.qi,i}); if(S.qi<2){ S.qi++; renderQ(); } else toSelect(); }
 
 /* 서비스 선택 — 슬롯 애니메이션 */
@@ -680,34 +705,37 @@ function mealCard(m){ return `<div class="meal"><img class="mimg" src="${m.img}"
 function chip(name,color){ return `<div class="foodchip"><span class="g" style="background:${color}"></span>${name}</div>`; }
 function shade(hex){ const n=parseInt(hex.slice(1),16); let r=Math.max(0,(n>>16)-26),g=Math.max(0,((n>>8)&255)-26),b=Math.max(0,(n&255)-26); return '#'+((r<<16)|(g<<8)|b).toString(16).padStart(6,'0'); }
 
-function foodCard(emo, label, count, foods, color, bg, emptyMsg){
-  const inner = (foods&&foods.length) ? `<div class="foodchips">${foods.map(f=>chip(f,color)).join('')}</div>` : `<div class="sub" style="font-size:24px; color:${color}">${emptyMsg}</div>`;
-  return `<div class="card" style="border-left:8px solid ${color}">
-    <div class="ct"><span style="color:${color}">${emo} ${label}</span><span style="margin-left:auto; font-size:24px; color:${color}; background:${bg}; padding:6px 16px; border-radius:14px">${count}종</span></div>${inner}</div>`;
-}
-function renderIgg(d){ const z=d.zones;
+function renderIgg(d){
+  const sym=SYMPTOM[S.symptom]||SYMPTOM.none;
+  const bucket={5:[],4:[],3:[],12:[]};
+  d.foods.forEach(([n,lv])=>{ bucket[lv>=3?lv:12].push(n); });
+  const symLine = sym.short ? `<div class="sym-chip">🩺 요즘 신경 쓰이는 것 · ${sym.short}</div>` : `<div class="thcatch">${d.catch}</div>`;
   document.getElementById('page-report').innerHTML=`
     <div class="type-hero" style="background:linear-gradient(120deg,${d.color},${shade(d.color)})">
-      <div class="thmascot">${d.mascot}</div><div><div class="thno">이너뷰티 유형 · ${d.typeNo}</div><div class="thname">${d.typeName}</div><div class="thcatch">${d.catch}</div></div></div>
-    ${foodCard('🚫', d.warnMild?'주의 (강한 반응)':'주의가 필요한 음식', z.warn, d.warn, '#F67900', '#FFF4EA', '강한 반응 식품이 없어요 👍')}
-    ${foodCard('🟡', '보통 (옅은 반응)', z.mid, d.mid, '#E3A700', '#FFF8D8', '해당 없음')}
-    ${foodCard('💚', '나와 잘 맞는 음식', z.good, d.good, '#12BA7E', '#E9FBF5', '')}`;
+      <div class="thmascot">${d.mascot}</div>
+      <div class="thbody"><div class="thno">이너뷰티 유형 · ${d.typeNo}</div><div class="thname">${d.typeName}</div>${symLine}</div></div>
+    ${IGG_LEVELS.map(L=>{ const foods=bucket[L.key];
+      return `<div class="lvl-card" style="border-left:8px solid ${L.color}">
+        <div class="lvl-head"><span class="lvl-badge" style="color:${L.color}; background:${L.bg}">${L.label}</span>
+          <span class="lvl-tag" style="color:${L.color}">${L.tag} · <b>${L.hint}</b></span>
+          <span class="lvl-cnt">${foods.length}종</span></div>
+        ${foods.length ? `<div class="foodchips">${foods.map(f=>chip(f,L.color)).join('')}</div>` : `<div class="lvl-empty">해당 음식 없음 👍</div>`}
+      </div>`; }).join('')}`;
+  const tipLine = sym.tip ? `<div class="routine" style="margin-top:12px">💡 ${sym.tip}</div>` : '';
   document.getElementById('page-solution').innerHTML=`
     <div class="card"><div class="ct">🔄 이렇게 바꿔 먹어보세요</div>
       <div class="swaps">${d.swaps.map(s=>`<div class="swap"><span class="from">${s[0]}</span><span class="arw">→</span><span class="to">${s[1]}</span></div>`).join('')}</div></div>
     <div class="card"><div class="ct">💊 ${d.typeName} 맞춤 영양제</div><div class="prod-row">${d.prods.map(prodCard).join('')}</div></div>
     <div class="card"><div class="ct">🍱 내 몸에 맞는 도시락</div><div class="meal-row">${d.meals.map(mealCard).join('')}</div></div>
-    <div class="card"><div class="ct">🎁 한 번에 챙기는 케어 세트</div><div class="careset"><div class="cs-l"><div class="cs-t">${d.typeName}을 위해 한 번에 챙기기</div><div class="cs-p"><s>${won(d.setOrig)}</s>${won(d.setPrice)}</div></div><div style="font-size:56px">🛒</div></div></div>`;
+    <div class="card"><div class="ct">🎁 한 번에 챙기는 케어 세트</div><div class="careset"><div class="cs-l"><div class="cs-t">${d.typeName}을 위해 한 번에 챙기기</div><div class="cs-p"><s>${won(d.setOrig)}</s>${won(d.setPrice)}</div></div><div style="font-size:56px">🛒</div></div>${tipLine}</div>`;
 }
-function zonePill(k,label,n){ const c=FZONE[k]||'#F67900'; const bg=k==='good'?'#E9FBF5':k==='mid'?'#FFF8D8':'#FFF4EA';
-  return `<div class="zone-pill" style="border-color:${c}33; background:${bg}"><div class="zn" style="color:${c}">${label}</div><div class="zc" style="color:${c}">${n}</div><div class="zu">종</div></div>`; }
 
 function renderCmfa(d){
   const ranked=AX.map((name,i)=>({name, zone:d.zones[i]})).sort((a,b)=>zoneRank[a.zone]-zoneRank[b.zone]);
   const noteOf=z=> z==='watch'?'조금 챙겨보면 좋아요':z==='mid'?'무난한 편이에요':'건강해요 👍';
   document.getElementById('page-report').innerHTML=`
     <div class="type-hero" style="background:linear-gradient(120deg,#22C3BC,#12A09A)">
-      <div class="thmascot">${d.mascot}</div><div><div class="thno">종합 대사기능 · 6가지 밸런스</div><div class="thname">컨디션 밸런스</div><div class="thcatch">챙길 항목부터\n건강한 항목까지 한눈에</div></div></div>
+      <div class="thmascot">${d.mascot}</div><div class="thbody"><div class="thno">종합 대사기능 · 6가지 밸런스</div><div class="thname">컨디션 밸런스</div>${(SYMPTOM[S.symptom]&&SYMPTOM[S.symptom].short)?`<div class="sym-chip">🩺 요즘 신경 쓰이는 것 · ${SYMPTOM[S.symptom].short}</div>`:`<div class="thcatch">챙길 항목부터\n건강한 항목까지 한눈에</div>`}</div></div>
     <div class="card"><div class="ct">📡 6가지 밸런스 레이더</div>
       <div class="radar-wrap">${radarSVG(d.zones)}
         <div class="radar-legend"><span><i style="background:${ZONE.good.c}"></i>좋음</span><span><i style="background:${ZONE.mid.c}"></i>보통</span><span><i style="background:${ZONE.watch.c}"></i>관심</span></div></div></div>
