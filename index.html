@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>바이오컴 부스 키오스크 프로토타입</title>
 <style>
 /* ============================================================
@@ -34,7 +34,7 @@
 html,body{margin:0; height:100%; background:#0a1414; overflow:hidden;
   font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif; -webkit-font-smoothing:antialiased;}
 #viewport{position:fixed; inset:0; display:flex; align-items:center; justify-content:center;}
-#kiosk{position:relative; width:1080px; height:1920px; transform-origin:center center; background:var(--bg); color:var(--txt); overflow:hidden;}
+#kiosk{position:absolute; top:50%; left:50%; width:1080px; height:1920px; transform-origin:center center; background:var(--bg); color:var(--txt); overflow:hidden;}
 
 /* 상단 고지 헤더(독립) */
 .topbar{position:absolute; top:0; left:0; right:0; height:72px; display:flex; align-items:center;
@@ -220,6 +220,8 @@ h1{font-size:58px; line-height:1.16; margin:0 0 10px; letter-spacing:-.035em; fo
 /* CMFA 레이더 + 심각도 정렬 지표 리스트 */
 .radar-wrap{display:flex; flex-direction:column; align-items:center; gap:6px;}
 svg.radar{width:440px; height:380px; flex-shrink:0; display:block; margin:0 auto;}
+svg.radar-igg{width:414px; height:306px; flex-shrink:0; display:block; margin:0 auto 2px;}
+.igg-radar-cap{font-size:21px; color:var(--txt-dim); font-weight:600; text-align:center; margin-top:2px; letter-spacing:-.02em;}
 .radar-legend{display:flex; flex-direction:row; justify-content:center; gap:30px; font-size:23px; color:var(--txt-dim); font-weight:700;}
 .radar-legend span{display:flex; align-items:center; gap:10px;} .radar-legend i{width:16px; height:16px; border-radius:50%;}
 .axis-list{display:flex; flex-direction:column; gap:10px;}
@@ -454,6 +456,23 @@ const IGG_LEVELS=[
   { key:3, label:'3단계', tag:'섭취 주의', hint:'소량·가끔만', color:'#F67900', bg:'#FFF4EA' },
   { key:12, label:'1~2단계', tag:'섭취 가능', hint:'편하게 OK', color:'#12BA7E', bg:'#E9FBF5' },
 ];
+/* IgG 음식군 레이더 — 재료를 6개 음식군으로 분류(모든 페르소나 재료 포함). 군별 '최고 반응단계'를 반경으로 */
+const IGG_GROUPS=[
+  {key:'dairy',label:'유제품·난류'},{key:'meat',label:'육류'},{key:'sea',label:'수산물'},
+  {key:'grain',label:'곡물'},{key:'nut',label:'견과류'},{key:'veg',label:'채소·과일'},
+];
+const FOOD_GROUP={
+  우유:'dairy',체다치즈:'dairy',요거트:'dairy',버터:'dairy',달걀흰자:'dairy',달걀노른자:'dairy',
+  소고기:'meat',돼지고기:'meat',닭고기:'meat',닭가슴살:'meat',
+  새우:'sea',고등어:'sea',연어:'sea',대구:'sea',
+  밀:'grain',통밀:'grain',보리:'grain',효모:'grain',옥수수:'grain',귀리:'grain',메밀:'grain',쌀:'grain',현미:'grain',감자:'grain',고구마:'grain',
+  아몬드:'nut',땅콩:'nut',캐슈넛:'nut',호두:'nut',참깨:'nut',
+  브로콜리:'veg',양배추:'veg',사과:'veg',바나나:'veg',당근:'veg',마늘:'veg',양파:'veg',대두:'veg',두부:'veg',
+};
+function iggGroupLevels(foods){ const m={};
+  foods.forEach(([n,lv])=>{ const g=FOOD_GROUP[n]; if(g&&(!(g in m)||lv>m[g])) m[g]=lv; });
+  return IGG_GROUPS.map(g=>({label:g.label, lvl:m[g.key]||1})); }   // 해당 군 음식 없으면 1단계(안심)
+function iggLevelColor(lv){ return lv>=5?'#D92020':lv>=4?'#F04545':lv>=3?'#F67900':'#12BA7E'; }
 /* 증상 문진(Q3) — 실제 앱 사전문진 문항 기반. 리포트/솔루션을 개인화 */
 const SYMPTOM={
   gut:{ short:'속 더부룩·가스', call:'식사 후 속이 자주 불편하다면, 아래 주의 음식을 줄이며 편안함이 달라지는지 살펴보세요.', tip:'규칙적인 식사와 발효식으로 속 편한 리듬 만들기' },
@@ -479,11 +498,11 @@ const DUMMY_IGG=[
     swaps:[['아몬드·캐슈넛','호박씨·해바라기씨'],['달걀 요리','두부 스크램블']],
     prods:[[SUP.bio,'추천 1순위'],[SUP.clean,'추천 2순위'],[SUP.young,'추천 3순위']], meals:[MEAL.salmon,MEAL.cod],
     routine:'견과·달걀을 2주 줄이고 피부 트러블·컨디션 변화를 기록해 보세요.', setPrice:124000, setOrig:180000 },
-  { key:'META', mascot:'🐻‍❄️', typeNo:'4유형', typeName:'대사 저하형', catch:'저전력 모드를\n체계적으로 관리해야 해요.', color:'#157D78',
-    foods:[['달걀흰자',4],['우유',4],['대두',3],['새우',3],['밀',3],['효모',3],['돼지고기',2],['소고기',2],['고등어',2],['바나나',2],['쌀',1],['닭가슴살',1],['현미',1],['브로콜리',1],['고구마',1],['사과',1],['양배추',1],['두부',1],['당근',1],['마늘',1],['양파',1]],
-    swaps:[['우유','식물성 우유'],['대두 단백','완두·쌀 단백']],
-    prods:[[SUP.dang,'추천 1순위'],[SUP.neuro,'추천 2순위'],[SUP.bio,'추천 3순위']], meals:[MEAL.beef,MEAL.jeyuk],
-    routine:'특정 음식을 끊기보다, 골고루 먹으며 대사 밸런스를 챙기는 데 집중해 보세요.', setPrice:133800, setOrig:220000 },
+  { key:'META', mascot:'🦁', typeNo:'4유형', typeName:'동물성 단백 민감형', catch:'좋아하는 고기,\n종류를 바꿔가며 즐겨요.', color:'#A65A2B',
+    foods:[['소고기',4],['돼지고기',4],['새우',4],['고등어',3],['달걀흰자',3],['우유',3],['닭고기',2],['효모',2],['밀',2],['대두',2],['바나나',2],['쌀',1],['닭가슴살',1],['현미',1],['브로콜리',1],['고구마',1],['사과',1],['양배추',1],['두부',1],['당근',1],['양파',1]],
+    swaps:[['소·돼지 붉은 고기 잦은 끼','닭가슴살·흰살생선으로 번갈아'],['가공육(햄·소시지)','수비드 살코기·두부']],
+    prods:[[SUP.bio,'추천 1순위'],[SUP.dang,'추천 2순위'],[SUP.neuro,'추천 3순위']], meals:[MEAL.cod,MEAL.lasagna],
+    routine:'특정 고기를 완전히 끊기보다, 종류를 바꿔가며 다양하게 즐기고 반응을 살펴보세요.', setPrice:133800, setOrig:220000 },
 ];
 const AX=['체중조절능력','장 건강','독소 스트레스','항산화 능력','정신건강 및 집중력','유전자 기능'];
 const AX_SHORT=['체중조절','장 건강','독소 케어','항산화','정신·집중','유전자'];
@@ -522,10 +541,11 @@ const BRANCH={
   A:{ kicker:'🍽️ 먹는 것 · 속 편함', qs:[
     { t:'요즘 내 식탁, 어떤 그림에 가까워요?', opts:[
       {emo:'🍞',label:'빵·면 자주',a:1,b:0},{emo:'🧀',label:'우유·치즈·요거트 자주',a:1,b:0},
+      {emo:'🥩',label:'고기·수산물 자주',a:1,b:0},
       {emo:'🥗',label:'채소·과일·골고루',a:0,b:1},{emo:'🎲',label:'그날그날 랜덤',a:1,b:0} ]},
     { t:"나와 '잘 맞는지' 궁금한 음식은?", persona:'igg', opts:[
       {emo:'🧀',label:'우유·치즈·유제품',a:2,b:0,igg:0},{emo:'🍞',label:'빵·면·밀가루',a:2,b:0,igg:1},
-      {emo:'🥜',label:'견과·달걀',a:2,b:0,igg:2},{emo:'🙆',label:'딱히 없어요 · 다 잘 먹어요',a:0,b:1,igg:3} ]},
+      {emo:'🥜',label:'견과·달걀',a:2,b:0,igg:2},{emo:'🥩',label:'고기·수산물',a:2,b:0,igg:3} ]},
     SYMPTOM_Q3,
   ]},
   B:{ kicker:'⚡ 에너지 · 컨디션', qs:[
@@ -540,7 +560,7 @@ const BRANCH={
   Both:{ kicker:'🤩 다 궁금해요', qs:[
     { t:"나와 '잘 맞는지' 궁금한 음식은?", persona:'igg', opts:[
       {emo:'🧀',label:'우유·치즈·유제품',a:2,b:0,igg:0},{emo:'🍞',label:'빵·면·밀가루',a:2,b:0,igg:1},
-      {emo:'🥜',label:'견과·달걀',a:2,b:0,igg:2},{emo:'🙆',label:'딱히 없어요',a:0,b:1,igg:3} ]},
+      {emo:'🥜',label:'견과·달걀',a:2,b:0,igg:2},{emo:'🥩',label:'고기·수산물',a:2,b:0,igg:3} ]},
     { t:'요즘 가장 아쉬운 컨디션은?', persona:'cmfa', opts:[
       {emo:'😴',label:'잠·집중·멍함',a:0,b:2,cmfa:0},{emo:'🌀',label:'소화·속 더부룩',a:1,b:1,cmfa:1},
       {emo:'⚖️',label:'체중·붓기·군살',a:0,b:2,cmfa:2},{emo:'🔋',label:'활력·회복·피부칙칙',a:0,b:2,cmfa:3} ]},
@@ -709,11 +729,15 @@ function renderIgg(d){
   const sym=SYMPTOM[S.symptom]||SYMPTOM.none;
   const bucket={5:[],4:[],3:[],12:[]};
   d.foods.forEach(([n,lv])=>{ bucket[lv>=3?lv:12].push(n); });
+  const groups=iggGroupLevels(d.foods);
   const symLine = sym.short ? `<div class="sym-chip">🩺 요즘 신경 쓰이는 것 · ${sym.short}</div>` : `<div class="thcatch">${d.catch}</div>`;
   document.getElementById('page-report').innerHTML=`
     <div class="type-hero" style="background:linear-gradient(120deg,${d.color},${shade(d.color)})">
       <div class="thmascot">${d.mascot}</div>
       <div class="thbody"><div class="thno">이너뷰티 유형 · ${d.typeNo}</div><div class="thname">${d.typeName}</div>${symLine}</div></div>
+    <div class="card" style="padding:16px 22px 12px; margin-bottom:14px"><div class="ct" style="margin-bottom:4px">🕸️ 음식군별 밸런스</div>
+      <div class="radar-wrap">${iggRadarSVG(groups)}
+        <div class="radar-legend"><span><i style="background:#12BA7E"></i>섭취 안전</span><span><i style="background:#F67900"></i>섭취 주의</span><span><i style="background:#F04545"></i>섭취 배제</span></div></div></div>
     ${IGG_LEVELS.map(L=>{ const foods=bucket[L.key];
       return `<div class="lvl-card" style="border-left:8px solid ${L.color}">
         <div class="lvl-head"><span class="lvl-badge" style="color:${L.color}; background:${L.bg}">${L.label}</span>
@@ -759,6 +783,18 @@ function radarSVG(zones){ const cx=210,cy=190,R=140,N=6;
     const[lx,ly]=pt(i,R+26); labels+=`<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" fill="#46474D" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="middle">${AX_SHORT[i]}</text>`; });
   return `<svg class="radar" viewBox="0 0 420 380">${grid}<path d="${poly}Z" fill="rgba(34,195,188,.18)" stroke="#22C3BC" stroke-width="3.5"/>${dots}${labels}</svg>`;
 }
+/* IgG 음식군 레이더 — 단계 높을수록(나쁠수록) 안쪽, 낮을수록(잘 맞을수록) 바깥(CMFA와 동일: 넓을수록 좋음) */
+function iggRadarSVG(groups){ const cx=220,cy=168,R=118,N=groups.length;
+  const pt=(i,r)=>{ const a=(-90+i*(360/N))*Math.PI/180; return [cx+r*Math.cos(a), cy+r*Math.sin(a)]; };
+  let grid=''; [0.2,0.4,0.6,0.8,1].forEach(f=>{ let p=''; for(let i=0;i<N;i++){ const[x,y]=pt(i,R*f); p+=(i?'L':'M')+x.toFixed(1)+' '+y.toFixed(1);} grid+=`<path d="${p}Z" fill="none" stroke="#E1E3E8"/>`; });
+  for(let i=0;i<N;i++){ const[x,y]=pt(i,R); grid+=`<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#ECEEF1"/>`; }
+  let poly='',dots='',labels=''; groups.forEach((g,i)=>{ const lv=Math.max(1,Math.min(5,g.lvl));
+    const f=0.16+0.84*(5-lv)/4;   // 반전: lv1→가득(1.0), lv5→최소(0.16)
+    const[x,y]=pt(i,R*f); poly+=(i?'L':'M')+x.toFixed(1)+' '+y.toFixed(1);
+    const c=iggLevelColor(lv); dots+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="8" fill="${c}" stroke="#fff" stroke-width="2.5"/>`;
+    const[lx,ly]=pt(i,R+30); labels+=`<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" fill="#46474D" font-size="20" font-weight="800" text-anchor="middle" dominant-baseline="middle">${g.label}</text>`; });
+  return `<svg class="radar-igg" viewBox="0 0 440 336">${grid}<path d="${poly}Z" fill="rgba(34,195,188,.15)" stroke="#22C3BC" stroke-width="4"/>${dots}${labels}</svg>`;
+}
 
 /* ===== 유휴 ===== */
 let idleTimer=null,cdTimer=null,cdLeft=0;
@@ -781,8 +817,13 @@ function renderQRs(){ const a=document.getElementById('qrAos'), i=document.getEl
 
 /* ===== 부트 ===== */
 function div(c){ const d=document.createElement('div'); d.className=c; return d; }
-function fit(){ const k=document.getElementById('kiosk'); const s=Math.min(window.innerWidth/1080, window.innerHeight/1920); k.style.transform='scale('+s+')'; }
-window.addEventListener('resize', fit); fit(); renderQRs(); go('s-home');
+function fit(){ const k=document.getElementById('kiosk');
+  const vw=window.visualViewport?window.visualViewport.width:window.innerWidth;
+  const vh=window.visualViewport?window.visualViewport.height:window.innerHeight;
+  const s=Math.min(vw/1080, vh/1920); k.style.transform='translate(-50%,-50%) scale('+s+')'; }
+window.addEventListener('resize', fit); window.addEventListener('orientationchange', fit);
+if(window.visualViewport) window.visualViewport.addEventListener('resize', fit);
+fit(); renderQRs(); go('s-home');
 const INTRO_SRC='assets/brand/intro.mp4';
 if(INTRO_SRC){ const v=document.getElementById('introVideo'); v.src=INTRO_SRC; v.style.display='block'; document.getElementById('vfallback').style.display='none'; }
 window.addEventListener('load', initCamera);
