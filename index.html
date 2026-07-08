@@ -194,7 +194,7 @@ h1{font-size:58px; line-height:1.16; margin:0 0 10px; letter-spacing:-.035em; fo
 .rpage-nav.go-sol{background:linear-gradient(120deg,var(--mint),#17B3AD); color:#fff; border:none; box-shadow:0 10px 26px rgba(34,195,188,.34);}
 .rpage-nav.go-rep{background:#fff; color:var(--mint-600); border:2.5px solid var(--mint);}
 .rpage{display:none; height:100%;} .rpage.on{display:block; animation:fade .35s;}
-.card{background:#fff; border:1px solid var(--line); border-radius:24px; padding:24px 26px; margin-bottom:16px; box-shadow:var(--shadow-sm);}
+.card{background:#fff; border:1px solid var(--line); border-radius:24px; padding:20px 24px; margin-bottom:12px; box-shadow:var(--shadow-sm);}
 .ct{display:flex; align-items:center; gap:9px; font-size:26px; color:var(--n-900); font-weight:800; margin-bottom:14px; letter-spacing:-.02em;}
 
 /* 유형 히어로(컴팩트) */
@@ -237,37 +237,57 @@ svg.radar-igg{width:414px; height:306px; flex-shrink:0; display:block; margin:0 
 .axis-row .anote{font-size:22px; color:var(--txt-dim); font-weight:600;}
 
 /* 우선순위 */
-.prio{display:flex; align-items:center; gap:18px; padding:18px 22px; border-radius:20px; margin-bottom:12px; background:var(--n-50); border:1px solid var(--line);}
-.prio .rank{width:56px; height:56px; border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:800; flex-shrink:0; color:#fff;}
+.prio{display:flex; align-items:center; gap:16px; padding:11px 18px; border-radius:18px; margin-bottom:8px; background:var(--n-50); border:1px solid var(--line);}
+.prio .rank{width:48px; height:48px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:25px; font-weight:800; flex-shrink:0; color:#fff;}
 .prio .pn{font-size:29px; font-weight:800; color:var(--n-900);} .prio .pd{font-size:22px; color:var(--txt-dim); font-weight:600;}
 
 /* 제품 카드(3열 수납) */
 .prod-row{display:flex; gap:16px;}
 .prod{flex:1; min-width:0; background:#fff; border:1px solid var(--line); border-radius:22px; overflow:hidden; box-shadow:var(--shadow-sm);}
-.prod .pimg{width:100%; height:150px; object-fit:cover; background:var(--n-50); display:block;}
+.prod .pimg{width:100%; height:114px; object-fit:cover; background:var(--n-50); display:block;}
 .prod .pbody{padding:16px 16px 18px;}
 .prod .prank{display:inline-block; font-size:18px; font-weight:800; color:var(--mint-600); background:var(--mint-50); padding:5px 12px; border-radius:10px; margin-bottom:8px;}
 .prod .pnm{font-size:25px; font-weight:800; color:var(--n-900); line-height:1.2; margin-bottom:6px; letter-spacing:-.02em;}
-.prod .pk{font-size:21px; color:var(--txt-dim); line-height:1.38; font-weight:600; margin-bottom:2px; min-height:58px;}
+.prod .pk{font-size:20px; color:var(--txt-dim); line-height:1.34; font-weight:600; margin-bottom:2px; min-height:44px;}
 
 /* 도시락(2열) */
 .meal-row{display:flex; gap:16px;}
 .meal{flex:1; min-width:0; background:#fff; border:1px solid var(--line); border-radius:22px; overflow:hidden; box-shadow:var(--shadow-sm); display:flex;}
-.meal .mimg{width:150px; height:150px; object-fit:cover; background:var(--n-50); flex-shrink:0;}
+.meal .mimg{width:128px; height:128px; object-fit:cover; background:var(--n-50); flex-shrink:0;}
 .meal .mbody{padding:16px 18px; display:flex; flex-direction:column; justify-content:center;}
 .meal .mtag{display:inline-block; font-size:17px; font-weight:700; color:var(--watch); background:var(--watch-bg); padding:5px 11px; border-radius:9px; margin-bottom:8px; align-self:flex-start;}
 .meal .mnm{font-size:25px; font-weight:800; color:var(--n-900); line-height:1.2; margin-bottom:8px; letter-spacing:-.02em;}
 .meal .mnut{display:flex; gap:14px; font-size:20px; color:var(--txt-dim); font-weight:600;}
 .meal .mnut b{color:var(--n-800);}
+.habit{margin-top:12px; font-size:25px; font-weight:600; color:var(--n-800); line-height:1.38; letter-spacing:-.02em;}
+.habit .hb{font-weight:800; color:var(--n-600);}
+.habit .hv{color:var(--mint-600); font-weight:700;}
+.habit .hd{color:var(--n-300); margin:0 8px;}
 
 .swaps{display:flex; flex-direction:column; gap:12px;}
 .swap{display:flex; align-items:center; gap:14px; font-size:26px; font-weight:700;}
 .swap .from{color:var(--caution);} .swap .to{color:var(--good);} .swap .arw{color:var(--n-300); font-size:28px;}
 .routine{font-size:25px; line-height:1.45; color:var(--n-800); background:var(--mint-50); border-left:5px solid var(--mint); padding:18px 22px; border-radius:12px; font-weight:600;}
-.careset{display:flex; align-items:center; gap:16px; padding:22px 26px; border-radius:22px; background:linear-gradient(120deg,var(--mint-50),#fff); border:2px solid var(--mint-100);}
-.careset .cs-t{font-size:25px; font-weight:800; color:var(--n-900);}
-.careset .cs-desc{font-size:22px; color:var(--txt-dim); font-weight:600; line-height:1.4; margin-top:8px;}
-.careset .cs-l{flex:1;}
+.careset{padding:16px 18px; border-radius:22px; background:linear-gradient(120deg,var(--mint-50),#fff); border:2px solid var(--mint-100);}
+.cs-head{display:flex; align-items:center; gap:12px; margin-bottom:12px;}
+.cs-head .cs-t{flex:1; font-size:25px; font-weight:800; color:var(--n-900); letter-spacing:-.02em; line-height:1.25;}
+.cs-badge{flex-shrink:0; font-size:21px; font-weight:800; color:#fff; background:linear-gradient(120deg,var(--mint),#17B3AD); padding:9px 18px; border-radius:16px; white-space:nowrap; box-shadow:0 6px 16px rgba(34,195,188,.3);}
+.cs-badge b{font-size:26px;}
+.bundle{display:flex; align-items:stretch; gap:8px;}
+.bundle-item{flex:1; min-width:0; background:#fff; border:1px solid var(--line); border-radius:16px; padding:12px 10px 14px; text-align:center; box-shadow:var(--shadow-sm); display:flex; flex-direction:column; align-items:center;}
+.bundle-item img{width:100%; height:120px; object-fit:cover; object-position:center; background:var(--n-50); border-radius:12px; margin-bottom:10px;}
+.bundle-item .bn{font-size:22px; font-weight:800; color:var(--n-900); line-height:1.2; letter-spacing:-.03em;}
+.bundle-plus{flex-shrink:0; align-self:center; font-size:34px; font-weight:800; color:var(--mint); width:20px; text-align:center;}
+.cs-syn{display:flex; gap:10px; font-size:21px; color:var(--n-700); font-weight:600; line-height:1.4; background:#fff; border:1.5px solid var(--mint-100); border-radius:14px; padding:13px 16px; margin-bottom:12px; letter-spacing:-.02em;}
+.cs-syn span:first-child{flex-shrink:0;}
+/* 독립 영양제(각각 추천) — 가로 컴팩트 리스트 */
+.prod-list{display:flex; flex-direction:column; gap:10px;}
+.prow{display:flex; align-items:center; gap:16px; padding:11px 14px; border:1px solid var(--line); border-radius:16px; background:#fff; box-shadow:var(--shadow-sm);}
+.prow img{width:78px; height:78px; object-fit:contain; background:var(--n-50); border-radius:12px; flex-shrink:0;}
+.prow .prb{min-width:0;}
+.prow .prn{font-size:24px; font-weight:800; color:var(--n-900); letter-spacing:-.02em; margin-bottom:3px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+.prow .prr{font-size:17px; font-weight:800; color:var(--mint-600); background:var(--mint-50); padding:3px 10px; border-radius:10px; white-space:nowrap;}
+.prow .prk{font-size:20px; color:var(--txt-dim); font-weight:600; line-height:1.3; letter-spacing:-.02em;}
 
 /* ============ 베네핏 ============ */
 #s-benefit{text-align:center; padding-top:24px;}
@@ -484,22 +504,22 @@ const DUMMY_IGG=[
     foods:[['우유',5],['체다치즈',5],['요거트',4],['버터',4],['달걀흰자',4],['새우',3],['소고기',3],['효모',3],['밀',2],['돼지고기',2],['바나나',2],['고등어',2],['쌀',1],['현미',1],['닭고기',1],['브로콜리',1],['양배추',1],['사과',1],['두부',1],['마늘',1],['양파',1]],
     swaps:[['우유·요거트','식물성 음료(귀리·아몬드유)'],['체다치즈','두부·식물성 치즈']],
     prods:[[SUP.darae,'추천 1순위'],[SUP.bio,'추천 2순위'],[SUP.clean,'추천 3순위']], meals:[MEAL.samgye,MEAL.salmon],
-    routine:'유제품을 2주만 줄이고 속 편안함·피부 컨디션 변화를 체크해 보세요.', setDesc:'다래케어·바이오밸런스·클린밸런스로 과민반응 완화와 장·피부 밸런스를 한 번에 챙기는 구성이에요.', setPrice:156400, setOrig:255000 },
+    routine:'유제품을 2주만 줄이고 속 편안함·피부 컨디션 변화를 체크해 보세요.', setDesc:'따로 먹기보다 함께 챙기면 과민반응 완화·미네랄·피부 케어가 맞물려 이너뷰티 밸런스가 더 빨리 잡혀요.', setPrice:156400, setOrig:255000 },
   { key:'GUT', mascot:'🐧', typeNo:'1유형', typeName:'장 건강 저하형', catch:'장속 가스 폭풍을\n잔잔 모드로 돌려야 해요.', color:'#12A09A',
     foods:[['밀',5],['통밀',4],['보리',4],['효모',4],['옥수수',3],['귀리',3],['메밀',3],['대두',2],['우유',2],['달걀노른자',2],['쌀',1],['감자',1],['고구마',1],['닭고기',1],['돼지고기',1],['소고기',1],['두부',1],['당근',1],['브로콜리',1],['사과',1],['연어',1]],
     swaps:[['밀가루 면·빵','쌀·두부면·글루텐프리'],['보리차','루이보스·옥수수차']],
     prods:[[SUP.bio,'추천 1순위'],[SUP.clean,'추천 2순위'],[SUP.reset,'조건부 · 글루텐']], meals:[MEAL.galbi,MEAL.beef],
-    routine:'‘글루텐 프리 리셋데이’를 주 2회 정해 4주 체험 후 컨디션을 비교해 보세요.', setDesc:'바이오밸런스·클린밸런스·리셋데이로 글루텐 부담을 줄이고 속을 편하게 하는 구성이에요.', setPrice:147800, setOrig:235000 },
+    routine:'‘글루텐 프리 리셋데이’를 주 2회 정해 4주 체험 후 컨디션을 비교해 보세요.', setDesc:'함께 챙기면 미네랄·이너뷰티에 장 케어가 더해져 글루텐 부담 완화 효과가 서로 상승해요.', setPrice:147800, setOrig:235000 },
   { key:'SKIN', mascot:'🦊', typeNo:'5유형', typeName:'염증형', catch:'몸속 불씨를\n진정 모드로 돌려야 해요.', color:'#F04545',
     foods:[['아몬드',5],['달걀노른자',5],['땅콩',4],['캐슈넛',4],['달걀흰자',4],['호두',3],['참깨',3],['새우',3],['밀',2],['우유',2],['돼지고기',2],['쌀',1],['닭고기',1],['소고기',1],['양배추',1],['사과',1],['대구',1],['두부',1],['마늘',1],['양파',1],['바나나',1]],
     swaps:[['아몬드·캐슈넛','호박씨·해바라기씨'],['달걀 요리','두부 스크램블']],
     prods:[[SUP.bio,'추천 1순위'],[SUP.clean,'추천 2순위'],[SUP.young,'추천 3순위']], meals:[MEAL.salmon,MEAL.cod],
-    routine:'견과·달걀을 2주 줄이고 피부 트러블·컨디션 변화를 기록해 보세요.', setDesc:'바이오밸런스·클린밸런스·영데이즈로 몸속 염증 진정에 초점을 맞춘 구성이에요.', setPrice:124000, setOrig:180000 },
+    routine:'견과·달걀을 2주 줄이고 피부 트러블·컨디션 변화를 기록해 보세요.', setDesc:'함께 챙기면 미네랄·이너뷰티에 항산화가 맞물려 몸속 염증 진정이 더 탄탄해져요.', setPrice:124000, setOrig:180000 },
   { key:'META', mascot:'🦁', typeNo:'4유형', typeName:'동물성 단백 민감형', catch:'좋아하는 고기,\n종류를 바꿔가며 즐겨요.', color:'#A65A2B',
     foods:[['소고기',4],['돼지고기',4],['새우',4],['고등어',3],['달걀흰자',3],['우유',3],['닭고기',2],['효모',2],['밀',2],['대두',2],['바나나',2],['쌀',1],['닭가슴살',1],['현미',1],['브로콜리',1],['고구마',1],['사과',1],['양배추',1],['두부',1],['당근',1],['양파',1]],
     swaps:[['소·돼지 붉은 고기 잦은 끼','닭가슴살·흰살생선으로 번갈아'],['가공육(햄·소시지)','수비드 살코기·두부']],
     prods:[[SUP.bio,'추천 1순위'],[SUP.dang,'추천 2순위'],[SUP.neuro,'추천 3순위']], meals:[MEAL.cod,MEAL.lasagna],
-    routine:'특정 고기를 완전히 끊기보다, 종류를 바꿔가며 다양하게 즐기고 반응을 살펴보세요.', setDesc:'바이오밸런스·당당케어·뉴로마스터로 동물성 단백 식습관의 대사 부담을 함께 관리하는 구성이에요.', setPrice:133800, setOrig:220000 },
+    routine:'특정 고기를 완전히 끊기보다, 종류를 바꿔가며 다양하게 즐기고 반응을 살펴보세요.', setDesc:'함께 챙기면 미네랄·혈당·혈행이 서로 받쳐줘 동물성 단백 식습관의 대사 부담을 더 촘촘히 관리해요.', setPrice:133800, setOrig:220000 },
 ];
 const AX=['체중조절능력','장 건강','독소 스트레스','항산화 능력','정신건강 및 집중력','유전자 기능'];
 const AX_SHORT=['체중조절','장 건강','독소 케어','항산화','정신·집중','유전자'];
@@ -507,19 +527,19 @@ const DUMMY_CMFA=[
   { key:'MIND', focus:'정신건강 및 집중력', mascot:'🧠', zones:['mid','good','good','watch','watch','good'],
     prio:[['정신건강 · 집중/스트레스','watch'],['항산화 · 산화 스트레스','watch'],['체중 · 대사 효율','mid']],
     prods:[[SUP.meta,'수면·이완'],[SUP.neuro,'집중·혈행']], meal:MEAL.beef, diet:'저GI 식단', life:'수면 위생·오후 리듬',
-    routine:'취침 1시간 전 화면을 줄이고, 오후엔 카페인 대신 산책으로 리듬을 잡아보세요.', setDesc:'메타드림·뉴로마스터로 수면·이완과 집중·혈행을 함께 챙기는 구성이에요.', setPrice:71900, setOrig:106000 },
+    routine:'취침 1시간 전 화면을 줄이고, 오후엔 카페인 대신 산책으로 리듬을 잡아보세요.', setDesc:'함께 챙기면 수면·이완이 집중·혈행을 받쳐줘 낮 컨디션과 밤 회복이 선순환해요.', setPrice:71900, setOrig:106000 },
   { key:'GUT', focus:'장 건강', mascot:'🌱', zones:['watch','watch','watch','mid','good','good'],
     prio:[['장 · 장내 환경/소화','watch'],['독소 · 해독 부담','watch'],['체중 · 대사 효율','watch']],
     prods:[[SUP.reset,'장 건강'],[SUP.sun,'프리바이오틱스']], meal:MEAL.galbi, diet:'장 친화 저자극·발효식', life:'규칙적 식사·야식 줄이기',
-    routine:'식사 시간을 일정하게 하고, 발효식(김치·요거트)을 하루 한 번 곁들여 보세요.', setDesc:'리셋데이·썬화이버로 장내 환경을 편안하게 다잡는 구성이에요.', setPrice:60900, setOrig:93000 },
+    routine:'식사 시간을 일정하게 하고, 발효식(김치·요거트)을 하루 한 번 곁들여 보세요.', setDesc:'함께 챙기면 장 케어와 식이섬유가 맞물려 장내 환경이 더 안정적으로 자리잡아요.', setPrice:60900, setOrig:93000 },
   { key:'WEIGHT', focus:'체중조절능력', mascot:'⚖️', zones:['watch','mid','watch','watch','good','good'],
     prio:[['체중 · 혈당/대사','watch'],['항산화 · 산화 스트레스','watch'],['독소 · 해독 부담','watch']],
     prods:[[SUP.dang,'혈당·대사'],[SUP.sun,'포만감·식이섬유']], meal:MEAL.lasagna, diet:'저당·가당음료 줄이기', life:'좌식 줄이기·틈새 활동',
-    routine:'가당음료를 물·탄산수로 바꾸고, 한 시간에 한 번은 일어나 움직여 보세요.', setDesc:'당당케어·썬화이버로 체중·혈당 관리를 함께 돕는 구성이에요.', setPrice:95800, setOrig:157000 },
+    routine:'가당음료를 물·탄산수로 바꾸고, 한 시간에 한 번은 일어나 움직여 보세요.', setDesc:'함께 챙기면 혈당·대사 관리에 포만감 식이섬유가 더해져 과식과 혈당 스파이크를 함께 눌러요.', setPrice:95800, setOrig:157000 },
   { key:'ANTIOX', focus:'항산화 능력', mascot:'✨', zones:['good','good','mid','mid','good','good'],
     prio:[['항산화 · 산화 스트레스','mid'],['독소 · 해독 부담','mid'],['체중 · 대사 효율(유지)','good']],
     prods:[[SUP.young,'글루타치온·SOD'],[SUP.clean,'피부 이너뷰티']], meal:MEAL.cod, diet:'컬러푸드(채소·과일·베리)', life:'반주 줄이기·수분',
-    routine:'전반적으로 좋아요! 컬러푸드를 한 끼에 한 가지씩 더해 지금 컨디션을 유지해 보세요.', setDesc:'영데이즈·클린밸런스로 지금의 좋은 컨디션을 오래 유지하는 구성이에요.', setPrice:85000, setOrig:120000 },
+    routine:'전반적으로 좋아요! 컬러푸드를 한 끼에 한 가지씩 더해 지금 컨디션을 유지해 보세요.', setDesc:'함께 챙기면 항산화와 이너뷰티가 맞물려 지금의 좋은 컨디션을 더 오래 지켜줘요.', setPrice:85000, setOrig:120000 },
 ];
 
 /* ===== 문진 ===== */
@@ -607,11 +627,11 @@ let capI=0; setInterval(()=>{ if(current==='s-home'){ capI=(capI+1)%CAPS.length;
 
 /* ===== 플로우 ===== */
 function startFlow(){ resetSession(); enterNeeds(); }
-function goHome(){ clearTimeout(S.scanTimer); clearInterval(S.fillIv); resetSession(); go('s-home'); }
+function goHome(){ clearTimeout(S.scanTimer); clearInterval(S.fillIv); clearTimeout(S.spinTimer); clearTimeout(S.spinTimer2); resetSession(); go('s-home'); }
 
 /* 뒤로가기 — 화면별 논리적 이전 단계 */
 function goBack(){
-  clearTimeout(S.scanTimer); clearInterval(S.fillIv);
+  clearTimeout(S.scanTimer); clearInterval(S.fillIv); clearTimeout(S.spinTimer); clearTimeout(S.spinTimer2);
   switch(current){
     case 's-needs':    goHome(); break;
     case 's-q':        qPrev(); break;                 // 문항 단위 되돌리기(점수 복원)
@@ -681,12 +701,16 @@ function runSpin(reco){
   // 실측: 타겟 카드 중심을 뷰포트(=중앙 프레임) 중심에 정확히 맞춤
   const targetX=Math.round(vw/2 - (tc.offsetLeft + tc.offsetWidth/2));
   void track.offsetWidth;
-  track.style.transition='transform 4s cubic-bezier(.12,.66,.1,1)'; track.style.transform='translate('+targetX+'px, -50%)';
-  setTimeout(()=>{ [...cards].forEach((c,idx)=>c.classList.toggle('on', idx===targetIndex));
-    const svc=SERVICES[recoIdx]; document.getElementById('spinName').textContent=svc.n;
-    document.getElementById('spinMini').textContent = reco==='igg' ? '손끝 피 한 방울로 나와 맞는 음식을 알아봐요' : '간단한 검사 한 번으로 6가지 몸 밸런스를 알아봐요';
-    result.classList.add('show');
-  }, 4150);
+  // 진입 0.08초 뒤 회전 시작 — 프레임이 뜨는 것과 거의 동시에 돌게 해 지연감 제거
+  clearTimeout(S.spinTimer); clearTimeout(S.spinTimer2);
+  S.spinTimer=setTimeout(()=>{
+    track.style.transition='transform 4s cubic-bezier(.12,.66,.1,1)'; track.style.transform='translate('+targetX+'px, -50%)';
+    S.spinTimer2=setTimeout(()=>{ [...cards].forEach((c,idx)=>c.classList.toggle('on', idx===targetIndex));
+      const svc=SERVICES[recoIdx]; document.getElementById('spinName').textContent=svc.n;
+      document.getElementById('spinMini').textContent = reco==='igg' ? '손끝 피 한 방울로 나와 맞는 음식을 알아봐요' : '간단한 검사 한 번으로 6가지 몸 밸런스를 알아봐요';
+      result.classList.add('show');
+    }, 4150);
+  }, 80);
 }
 
 /* 검체 */
@@ -717,6 +741,8 @@ function showResult(){ const svc=S.chosen; let idx;
 function showPage(p){ document.getElementById('page-report').classList.toggle('on', p==='report'); document.getElementById('page-solution').classList.toggle('on', p==='solution'); resetIdle(); }
 const won=n=>n.toLocaleString('ko-KR')+'원';
 function prodCard(p){ return `<div class="prod"><img class="pimg" src="${p[0].img}" alt=""><div class="pbody"><div class="prank">${p[1]}</div><div class="pnm">${p[0].n}</div><div class="pk">${p[0].key}</div></div></div>`; }
+function bundleStrip(prods){ return prods.map((p,i)=> (i?'<span class="bundle-plus">+</span>':'')+`<div class="bundle-item"><img src="${p[0].img}" alt=""><div class="bn">${p[0].n}</div></div>`).join(''); }
+function prodRow(pair){ const p=pair[0]; return `<div class="prow"><img src="${p.img}" alt=""><div class="prb"><div class="prn">${p.n}<span class="prr">${pair[1]}</span></div><div class="prk">${p.key}</div></div></div>`; }
 function mealCard(m){ return `<div class="meal"><img class="mimg" src="${m.img}" alt=""><div class="mbody"><span class="mtag">${m.tag}</span><div class="mnm">${m.n}</div><div class="mnut"><span><b>${m.cal}</b>kcal</span><span>단백 <b>${m.pro}</b>g</span></div></div></div>`; }
 function chip(name,color){ return `<div class="foodchip"><span class="g" style="background:${color}"></span>${name}</div>`; }
 function shade(hex){ const n=parseInt(hex.slice(1),16); let r=Math.max(0,(n>>16)-26),g=Math.max(0,((n>>8)&255)-26),b=Math.max(0,(n&255)-26); return '#'+((r<<16)|(g<<8)|b).toString(16).padStart(6,'0'); }
@@ -746,9 +772,14 @@ function renderIgg(d){
   document.getElementById('page-solution').innerHTML=`
     <div class="card"><div class="ct">🔄 이렇게 바꿔 먹어보세요</div>
       <div class="swaps">${d.swaps.map(s=>`<div class="swap"><span class="from">${s[0]}</span><span class="arw">→</span><span class="to">${s[1]}</span></div>`).join('')}</div></div>
-    <div class="card"><div class="ct">💊 ${d.typeName} 맞춤 영양제</div><div class="prod-row">${d.prods.map(prodCard).join('')}</div></div>
+    <div class="card"><div class="ct">💊 맞춤 영양제 · 각각 추천</div><div class="prod-row">${d.prods.map(prodCard).join('')}</div></div>
     <div class="card"><div class="ct">🍱 내 몸에 맞는 도시락</div><div class="meal-row">${d.meals.map(mealCard).join('')}</div></div>
-    <div class="card"><div class="ct">🎁 한 번에 챙기는 케어 세트</div><div class="careset"><div class="cs-l"><div class="cs-t">${d.typeName}을 위해 한 번에 챙기기</div><div class="cs-desc">${d.setDesc}</div></div><div style="font-size:56px">🛒</div></div>${tipLine}</div>
+    <div class="card"><div class="ct">🎁 한 번에 챙기는 세트 · 15% 할인</div>
+      <div class="careset">
+        <div class="cs-head"><div class="cs-t">${d.typeName}을 위해 한 번에 챙기기</div><div class="cs-badge">세트 <b>15%</b> 할인</div></div>
+        <div class="cs-syn"><span>🔗</span><span>${d.setDesc}</span></div>
+        <div class="bundle">${bundleStrip(d.prods)}</div>
+      </div></div>
     <button class="rpage-nav go-rep" onclick="showPage('report')">← 다시 내 리포트 확인하기</button>`;
 }
 
@@ -768,10 +799,15 @@ function renderCmfa(d){
   document.getElementById('page-solution').innerHTML=`
     <div class="card"><div class="ct">🎯 먼저 챙기면 좋은 순서</div>
       ${d.prio.map((p,i)=>`<div class="prio"><div class="rank" style="background:${rc[i]}">${i+1}</div><div><div class="pn">${p[0]}</div><div class="pd">${ZONE[p[1]].t} 영역</div></div></div>`).join('')}</div>
-    <div class="card"><div class="ct">💊 맞춤 케어 영양제</div><div class="prod-row">${d.prods.map((p,i)=>prodCard([p[0],'추천 '+(i+1)])).join('')}</div></div>
+    <div class="card"><div class="ct">💊 맞춤 영양제 · 각각 추천</div><div class="prod-row">${d.prods.map((p,i)=>prodCard([p[0],'추천 '+(i+1)])).join('')}</div></div>
     <div class="card"><div class="ct">🍱 추천 도시락 · 습관</div><div class="meal-row">${mealCard(d.meal)}</div>
-      <div class="swaps" style="margin-top:14px"><div class="swap"><span class="arw">🍚 식단</span><span class="to">${d.diet}</span></div><div class="swap"><span class="arw">🏃 습관</span><span class="to">${d.life}</span></div></div></div>
-    <div class="card"><div class="ct">🎁 한 번에 챙기는 케어 세트</div><div class="careset"><div class="cs-l"><div class="cs-t">${d.focus} 집중 케어</div><div class="cs-desc">${d.setDesc}</div></div><div style="font-size:56px">🛒</div></div></div>
+      <div class="habit"><span class="hb">🍚 식단</span> <span class="hv">${d.diet}</span> <span class="hd">·</span> <span class="hb">🏃 습관</span> <span class="hv">${d.life}</span></div></div>
+    <div class="card"><div class="ct">🎁 한 번에 챙기는 세트 · 15% 할인</div>
+      <div class="careset">
+        <div class="cs-head"><div class="cs-t">${d.focus} 집중 케어</div><div class="cs-badge">세트 <b>15%</b> 할인</div></div>
+        <div class="cs-syn"><span>🔗</span><span>${d.setDesc}</span></div>
+        <div class="bundle">${bundleStrip(d.prods)}</div>
+      </div></div>
     <button class="rpage-nav go-rep" onclick="showPage('report')">← 다시 내 리포트 확인하기</button>`;
 }
 function radarSVG(zones){ const cx=210,cy=190,R=140,N=6;
