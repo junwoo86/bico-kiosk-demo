@@ -82,7 +82,7 @@ h1{font-size:58px; line-height:1.16; margin:0 0 10px; letter-spacing:-.035em; fo
 
 /* ============ 0. 홈 ============ */
 #s-home{padding:72px 0 0; bottom:0;}   /* 홈은 액션밴드 없이 전체 사용, 상단 고지 아래 시작 */
-.home-video{position:relative; width:100%; aspect-ratio:21 / 10; flex-shrink:0; overflow:hidden; background:#08201e;}
+.home-video{position:relative; width:100%; aspect-ratio:17 / 10; flex-shrink:0; overflow:hidden; background:#08201e;}
 .home-video video{width:100%; height:100%; object-fit:cover; object-position:center;}
 .home-video .vfallback{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:16px;
   background:linear-gradient(135deg,#22C3BC 0%,#12A09A 60%,#0d7a75 100%);}
@@ -356,8 +356,7 @@ svg.radar{width:420px; height:380px; flex-shrink:0;}
   <!-- 처음으로(우하단 독립) + 결과화면 부스 CTA(하단 좌측, 나란히) -->
   <button class="homebtn hidden" id="homeBtn" onclick="goHome()">🏠 처음으로</button>
   <div class="booth-cta hidden" id="boothCta">
-    <div class="bcta-mini">☕ 부스에서 자세히 보고, 커피 한 잔 받아가세요</div>
-    <button class="btn btn-primary bcta-btn" onclick="go('s-benefit')">☕ 자세히 보고 · 커피 받으러 가기 (부스)</button>
+    <button class="btn btn-primary bcta-btn" onclick="go('s-benefit')">☕ 앱 설치 안내받고, 커피 받기 (부스로)</button>
   </div>
 
   <!-- 유휴 -->
@@ -553,17 +552,21 @@ function onSpinProceed(){ startSpecimen(S.recoSvc); }
 function runSpin(reco){
   const track=document.getElementById('spinTrack'), result=document.getElementById('spinResult');
   result.classList.remove('show');
-  const CARD=336, GAP=24, LOOPS=7, recoIdx=SERVICES.findIndex(s=>s.svc===reco);
+  const LOOPS=7, recoIdx=SERVICES.findIndex(s=>s.svc===reco);
   let html=''; for(let l=0;l<LOOPS;l++){ SERVICES.forEach(s=>html+=spinCardHTML(s)); } track.innerHTML=html;
+  // 세로 중앙정렬(translateY -50%) 유지 + 시작 위치 리셋 후 레이아웃 확정
+  track.style.transition='none'; track.style.transform='translate(0px, -50%)'; void track.offsetWidth;
+  const cards=track.children, targetIndex=(LOOPS-2)*SERVICES.length+recoIdx;
   const vw=document.querySelector('.spinner').clientWidth;
-  const targetIndex=(LOOPS-2)*SERVICES.length+recoIdx;              // 뒤쪽 루프에서 정지
-  const targetX=-(targetIndex*(CARD+GAP)+CARD/2-vw/2);
-  track.style.transition='none'; track.style.transform='translateX(0)'; void track.offsetWidth;
-  track.style.transition='transform 4s cubic-bezier(.12,.66,.1,1)'; track.style.transform='translateX('+targetX+'px)';
-  setTimeout(()=>{ [...track.children].forEach((c,idx)=>c.classList.toggle('on', idx===targetIndex));
+  const tc=cards[targetIndex];
+  // 실측: 타겟 카드 중심을 뷰포트(=중앙 프레임) 중심에 정확히 맞춤
+  const targetX=Math.round(vw/2 - (tc.offsetLeft + tc.offsetWidth/2));
+  void track.offsetWidth;
+  track.style.transition='transform 4s cubic-bezier(.12,.66,.1,1)'; track.style.transform='translate('+targetX+'px, -50%)';
+  setTimeout(()=>{ [...cards].forEach((c,idx)=>c.classList.toggle('on', idx===targetIndex));
     const svc=SERVICES[recoIdx]; document.getElementById('spinName').textContent=svc.n;
     document.getElementById('spinMini').textContent = reco==='igg' ? '손끝 혈액 한 방울로 · 나와 맞는 음식을 확인해요' : '유기산 검체로 · 6가지 대사 밸런스를 확인해요';
-    result.classList.add('show');   // 인라인 진행 버튼(spinBtn) 노출
+    result.classList.add('show');
   }, 4150);
 }
 
