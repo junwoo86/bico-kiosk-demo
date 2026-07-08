@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>바이오컴 부스 키오스크 프로토타입</title>
+<style>
+/* ============================================================
+   바이오컴 애프로 박람회 부스 키오스크 — 목업 프로토타입 v3
+   · 55인치 세로형(삼성 LH55QHCEBGCXKR, 표시 2160×3840 = 9:16)
+   · 톤앤매너 = bico-app 디자인 시스템(민트 #22C3BC · Pretendard · 흰색)
+   · 실제 제품·이미지·공식 IgG 유형↔제품 매핑(assets/products/)
+   · 모든 화면 9:16 안에 스크롤 없이 수납 · 하단 액션밴드(주버튼+처음으로 나란히)
+   ============================================================ */
+@font-face{font-family:'Pretendard'; font-weight:400; src:url('assets/fonts/Pretendard-Regular.ttf') format('truetype');}
+@font-face{font-family:'Pretendard'; font-weight:600; src:url('assets/fonts/Pretendard-SemiBold.ttf') format('truetype');}
+@font-face{font-family:'Pretendard'; font-weight:700; src:url('assets/fonts/Pretendard-Bold.ttf') format('truetype');}
+@font-face{font-family:'Pretendard'; font-weight:800; src:url('assets/fonts/Pretendard-ExtraBold.ttf') format('truetype');}
+
+:root{
+  --mint-50:#E4FCFC; --mint-100:#C2F7F6; --mint-200:#8BEAE5; --mint-300:#64D7D2;
+  --mint:#22C3BC; --mint-500:#12A09A; --mint-600:#157D78; --mint-700:#105E5A;
+  --n-50:#F3F5F7; --n-100:#E1E3E8; --n-200:#C4C7CD; --n-300:#ACAEB5;
+  --n-500:#72747B; --n-700:#46474D; --n-800:#2C2E32; --n-900:#171719;
+  --good:#12BA7E; --good-bg:#E9FBF5; --mid:#E3A700; --mid-bg:#FFF8D8;
+  --watch:#F67900; --watch-bg:#FFF4EA; --caution:#F04545; --caution-bg:#FFE9E9; --gold:#C59000;
+  --bg:#F3F5F7; --card:#FFFFFF; --line:#E9ECEF; --txt:#171719; --txt-dim:#72747B;
+  --shadow-sm:0 2px 8px rgba(20,30,35,.06); --shadow:0 6px 20px rgba(20,30,35,.08); --shadow-lg:0 12px 36px rgba(20,40,45,.12);
+  --band:210px;   /* 하단 액션밴드 예약 높이 */
+  --btnH:118px;   /* 표준 버튼 높이(처음으로·주버튼 공통) */
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none;}
+.hidden{display:none !important;}
+html,body{margin:0; height:100%; background:#0a1414; overflow:hidden;
+  font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif; -webkit-font-smoothing:antialiased;}
+#viewport{position:fixed; inset:0; display:flex; align-items:center; justify-content:center;}
+#kiosk{position:relative; width:1080px; height:1920px; transform-origin:center center; background:var(--bg); color:var(--txt); overflow:hidden;}
+
+/* 상단 고지 헤더(독립) */
+.topbar{position:absolute; top:0; left:0; right:0; height:72px; display:flex; align-items:center;
+  padding:0 44px; z-index:60; background:#fff; border-bottom:1px solid var(--line);}
+.disclaimer{font-size:23px; color:var(--n-500); font-weight:600; letter-spacing:-.02em;}
+.disclaimer b{color:var(--mint-600);}
+
+/* 진행 인디케이터 */
+.stepper{position:absolute; top:92px; left:0; right:0; display:flex; gap:12px; justify-content:center; z-index:55;}
+.stepper.hidden{display:none;}
+.stepper .dot{width:64px; height:8px; border-radius:4px; background:var(--n-100); transition:.3s;}
+.stepper .dot.on{background:var(--mint); box-shadow:0 0 0 4px var(--mint-50);}
+
+/* 처음으로 — 우하단 독립 고정(모든 화면 공통, 표준 버튼 높이) */
+.homebtn{position:absolute; right:44px; bottom:44px; z-index:67; width:250px; height:var(--btnH); border-radius:28px;
+  border:2.5px solid var(--mint); background:#fff; color:var(--mint-600); font-size:34px; font-weight:800;
+  display:flex; align-items:center; justify-content:center; gap:12px; box-shadow:var(--shadow-sm); letter-spacing:-.02em;}
+.homebtn:active{background:var(--mint-50); transform:scale(.97);}
+/* 결과 화면 부스 CTA — 하단 좌측(처음으로 자리 비워둠), 같은 높이로 나란히 */
+.booth-cta{position:absolute; left:44px; bottom:44px; width:calc(100% - 340px); z-index:66;}
+.booth-cta .bcta-mini{font-size:22px; color:var(--gold); font-weight:700; margin-bottom:12px; text-align:center;}
+.booth-cta .bcta-btn{height:var(--btnH); font-size:33px; width:100%;}
+
+.screen{position:absolute; top:0; left:0; right:0; bottom:0; display:none; flex-direction:column; padding:120px 56px 44px; overflow:hidden;}
+.screen.active{display:flex; animation:fade .4s cubic-bezier(.2,.7,.3,1);}
+@keyframes fade{from{opacity:0; transform:translateY(12px);} to{opacity:1; transform:none;}}
+
+h1{font-size:58px; line-height:1.16; margin:0 0 10px; letter-spacing:-.035em; font-weight:800; color:var(--n-900);}
+.sub{font-size:28px; color:var(--txt-dim); line-height:1.4; letter-spacing:-.02em; font-weight:500;}
+.accent{color:var(--mint-500);}
+
+.btn{display:flex; align-items:center; justify-content:center; gap:14px; border:none; border-radius:28px;
+  font-weight:800; letter-spacing:-.02em; cursor:pointer; transition:transform .12s; font-family:inherit;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:linear-gradient(120deg,var(--mint) 0%,#17B3AD 100%); color:#fff; box-shadow:0 12px 30px rgba(34,195,188,.35);}
+.btn-lg{height:var(--btnH); font-size:40px; width:100%;}
+
+/* 문진 선택 */
+.choices{display:flex; flex-direction:column; gap:22px; margin-top:40px;}
+.choice{display:flex; align-items:center; gap:26px; padding:34px 38px; border-radius:26px; background:#fff;
+  border:2px solid var(--line); font-size:38px; font-weight:700; color:var(--n-800); letter-spacing:-.02em; transition:all .15s; box-shadow:var(--shadow-sm);}
+.choice .emo{font-size:52px; width:70px; text-align:center; flex-shrink:0;}
+.choice:active,.choice.picked{background:var(--mint-50); border-color:var(--mint); box-shadow:0 0 0 3px var(--mint-100), var(--shadow);}
+.choice .chev{margin-left:auto; color:var(--n-200); font-size:42px;}
+
+/* ============ 0. 홈 ============ */
+#s-home{padding:72px 0 0; bottom:0;}   /* 홈은 액션밴드 없이 전체 사용, 상단 고지 아래 시작 */
+.home-video{position:relative; width:100%; aspect-ratio:21 / 10; flex-shrink:0; overflow:hidden; background:#08201e;}
+.home-video video{width:100%; height:100%; object-fit:cover; object-position:center;}
+.home-video .vfallback{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:16px;
+  background:linear-gradient(135deg,#22C3BC 0%,#12A09A 60%,#0d7a75 100%);}
+.home-video .brand{font-size:130px; font-weight:800; letter-spacing:-.05em; color:#fff; line-height:1;}
+.home-video .tag{font-size:30px; color:rgba(255,255,255,.9); font-weight:600;}
+.promo-band{flex-shrink:0; padding:34px 56px; text-align:center; color:#fff; position:relative; overflow:hidden;
+  background:linear-gradient(120deg,var(--mint) 0%,#14B3AC 55%,#0E9A94 100%);}
+.promo-band::after{content:""; position:absolute; right:-40px; bottom:-50px; width:220px; height:220px; border-radius:50%; background:rgba(255,255,255,.08);}
+.promo-band .pc{font-size:42px; font-weight:800; letter-spacing:-.03em; line-height:1.25; min-height:106px; display:flex; align-items:center; justify-content:center; transition:opacity .4s;}
+.home-bottom{position:relative; flex:1; padding:40px 60px 150px; display:flex; flex-direction:column; align-items:center; text-align:center; background:var(--bg);}
+.home-bottom .kick{display:inline-flex; align-items:center; gap:10px; font-size:30px; color:var(--mint-600); font-weight:800; margin-bottom:16px; background:var(--mint-50); padding:14px 28px; border-radius:22px;}
+.home-bottom h1{font-size:76px; margin-bottom:20px;}
+.home-bottom .desc{font-size:31px; color:var(--txt-dim); line-height:1.5; margin-bottom:26px; font-weight:500;}
+.mascot{width:150px; height:150px; object-fit:contain; margin-bottom:6px;}
+.footsteps{display:flex; gap:44px; margin:6px 0 30px;}
+.foot{font-size:74px; animation:step 1.6s infinite;} .foot:nth-child(2){animation-delay:.8s;}
+@keyframes step{0%,100%{transform:translateY(0); opacity:.35;} 50%{transform:translateY(-16px); opacity:.9;}}
+.tap-hint{margin-top:auto; font-size:40px; font-weight:800; color:#fff; background:linear-gradient(120deg,var(--mint),#17B3AD);
+  padding:42px 76px; border-radius:44px; box-shadow:0 14px 44px rgba(34,195,188,.4); animation:pulse 2s infinite; letter-spacing:-.02em;}
+@keyframes pulse{50%{transform:scale(1.04);}}
+@keyframes blink{50%{opacity:.3;}}
+
+/* ============ 서비스 선택(슬롯 애니메이션) ============ */
+#s-select{padding-top:112px;}
+.spinner{position:relative; width:100%; height:520px; margin-top:30px; overflow:hidden;
+  border-radius:32px; background:linear-gradient(180deg,#fff,var(--n-50)); border:1px solid var(--line); box-shadow:var(--shadow-sm);}
+/* 좌우 페이드 */
+.spinner::before,.spinner::after{content:""; position:absolute; top:0; bottom:0; width:120px; z-index:3; pointer-events:none;}
+.spinner::before{left:0; background:linear-gradient(90deg,#fff,transparent);}
+.spinner::after{right:0; background:linear-gradient(270deg,#fff,transparent);}
+/* 중앙 선택 하이라이트 프레임 — 카드보다 살짝 크게 감싸기 */
+.spin-center{position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:364px; height:460px;
+  border:5px solid var(--mint); border-radius:28px; z-index:2; box-shadow:0 0 0 2000px rgba(255,255,255,.32), 0 0 40px rgba(34,195,188,.3); pointer-events:none;}
+.spin-track{position:absolute; top:50%; left:0; transform:translateY(-50%); display:flex; gap:24px; align-items:center;}
+/* 카드 = 프레임 안에 꽉 차게(윗공백 제거): 이미지 + 이름영역이 카드 높이를 채움 */
+.spin-card{width:340px; height:436px; flex-shrink:0; background:#fff; border:2px solid var(--line); border-radius:24px; overflow:hidden;
+  box-shadow:var(--shadow-sm); display:flex; flex-direction:column; transition:transform .3s, box-shadow .3s;}
+.spin-card.on{transform:scale(1.04); border-color:var(--mint); box-shadow:0 12px 40px rgba(34,195,188,.3);}
+.spin-card img{width:100%; height:322px; object-fit:cover; background:var(--n-50); flex-shrink:0;}
+.spin-card .sn{flex:1; display:flex; align-items:center; justify-content:center; padding:12px 18px; font-size:30px; font-weight:800; text-align:center; color:var(--n-900); letter-spacing:-.03em; line-height:1.2;}
+.spin-result{margin-top:34px; text-align:center; opacity:0; transform:translateY(16px); transition:opacity .5s, transform .5s;}
+.spin-result.show{opacity:1; transform:none;}
+.spin-result .rlabel{font-size:30px; color:var(--txt-dim); font-weight:600;}
+.spin-result .rname{font-size:52px; font-weight:800; color:var(--mint-600); margin:6px 0 4px; letter-spacing:-.03em;}
+.spin-result .rmini{font-size:26px; color:var(--txt-dim); font-weight:500;}
+
+/* ============ 검체 애니메이션 ============ */
+#s-specimen{align-items:center; justify-content:flex-start; text-align:center;}
+.spec-stage{position:relative; width:100%; height:760px; display:flex; align-items:center; justify-content:center;}
+.finger{position:absolute; top:150px; left:50%; transform:translateX(-50%) rotate(180deg); font-size:168px; filter:drop-shadow(0 0 20px rgba(240,69,69,.25));}
+.blood-drop{position:absolute; left:50%; margin-left:-17px; top:322px; width:34px; height:44px; background:radial-gradient(circle at 40% 30%,#ff6b6b,#c62222); border-radius:50% 50% 50% 50%/60% 60% 40% 40%; opacity:0;}
+.blood-drop.fall{animation:drop 1.2s ease-in forwards;}
+@keyframes drop{0%{opacity:1; top:322px;} 85%{opacity:1;} 100%{top:472px; opacity:0;}}
+/* DBS 원 — 손끝 아래, 70% 축소(240→168) */
+.dbs{position:absolute; top:430px; left:50%; transform:translateX(-50%); width:168px; height:168px; border-radius:50%; border:8px solid var(--n-800); background:#fff; overflow:hidden; box-shadow:var(--shadow-lg);}
+.dbs .fill{position:absolute; left:50%; top:50%; width:106%; height:106%; border-radius:50%; transform:translate(-50%,-50%) scale(0); transform-origin:center; will-change:transform; background:radial-gradient(circle,#e02525 0%,#c11c1c 55%,#8b0b0b 100%); filter:blur(1px);}
+.dbs .lbl{position:absolute; bottom:-50px; left:50%; transform:translateX(-50%); white-space:nowrap; font-size:23px; color:var(--txt-dim); font-weight:600;}
+.tube{position:relative; width:170px; height:560px; border-radius:24px 24px 46px 46px; border:7px solid var(--n-200); background:#fff; overflow:hidden; box-shadow:var(--shadow);}
+.tube .cap{position:absolute; top:-7px; left:-7px; right:-7px; height:50px; background:var(--mint-600); border-radius:18px 18px 8px 8px;}
+.tube .liquid{position:absolute; bottom:0; left:0; right:0; height:0%; background:linear-gradient(180deg,rgba(255,240,160,.5),rgba(255,232,120,.8));}
+.tube .liquid::before{content:""; position:absolute; top:-10px; left:0; right:0; height:16px; background:rgba(255,248,200,.6); border-radius:50%;}
+.tube .ticks{position:absolute; top:66px; bottom:24px; left:10px; width:28px; display:flex; flex-direction:column; justify-content:space-between;}
+.tube .ticks span{height:2px; background:var(--n-200); width:18px;}
+
+/* ============ 웹캠 AI 스캔 ============ */
+#s-scan{align-items:center; justify-content:flex-start; text-align:center;}
+.scan-box{position:relative; width:760px; height:1080px; border-radius:44px; overflow:hidden; border:3px solid var(--mint); background:var(--n-800); box-shadow:0 0 70px rgba(34,195,188,.25);}
+.scan-box video{width:100%; height:100%; object-fit:cover; transform:scaleX(-1);}
+.scan-box .ph{width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; color:#fff; font-size:28px;}
+.scan-box .silhouette{font-size:230px; opacity:.3;}
+.laser{position:absolute; left:0; right:0; height:8px; top:0; background:linear-gradient(90deg,transparent,var(--mint),transparent); box-shadow:0 0 28px 10px rgba(34,195,188,.7);}
+.laser.run{animation:scan 2.5s ease-in-out 2;}
+@keyframes scan{0%{top:0;} 50%{top:calc(100% - 8px);} 100%{top:0;}}
+.scan-grid{position:absolute; inset:0; pointer-events:none; background-image:linear-gradient(rgba(34,195,188,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(34,195,188,.12) 1px,transparent 1px); background-size:52px 52px;}
+.scan-corner{position:absolute; width:56px; height:56px; border:4px solid var(--mint);}
+.sc-tl{top:24px; left:24px; border-right:0; border-bottom:0; border-radius:12px 0 0 0;}
+.sc-tr{top:24px; right:24px; border-left:0; border-bottom:0; border-radius:0 12px 0 0;}
+.sc-bl{bottom:24px; left:24px; border-right:0; border-top:0; border-radius:0 0 0 12px;}
+.sc-br{bottom:24px; right:24px; border-left:0; border-top:0; border-radius:0 0 12px 0;}
+.scan-status{margin-top:30px; font-size:36px; font-weight:800; color:var(--mint-600);}
+.scan-status .dots::after{content:""; animation:dots 1.4s steps(4) infinite;}
+@keyframes dots{0%{content:"";}25%{content:".";}50%{content:"..";}75%{content:"...";}}
+
+/* ============ 리포트 / 솔루션 ============ */
+#s-result{padding:96px 40px 190px;}
+.result-tabs{display:flex; gap:10px; background:#fff; border:2px solid var(--line); border-radius:22px; padding:7px; margin-bottom:18px; box-shadow:var(--shadow-sm); flex-shrink:0;}
+.result-tabs button{flex:1; height:72px; border:none; border-radius:15px; background:transparent; color:var(--n-500); font-size:28px; font-weight:800; font-family:inherit; letter-spacing:-.02em;}
+.result-tabs button.on{background:linear-gradient(120deg,var(--mint),#17B3AD); color:#fff;}
+.rpages{flex:1; overflow:hidden;}
+.rpage{display:none; height:100%;} .rpage.on{display:block; animation:fade .35s;}
+.card{background:#fff; border:1px solid var(--line); border-radius:24px; padding:24px 26px; margin-bottom:16px; box-shadow:var(--shadow-sm);}
+.ct{display:flex; align-items:center; gap:9px; font-size:26px; color:var(--n-900); font-weight:800; margin-bottom:14px; letter-spacing:-.02em;}
+
+/* 유형 히어로(컴팩트) */
+.type-hero{display:flex; align-items:center; gap:22px; padding:26px 30px; border-radius:26px; margin-bottom:16px; color:#fff; box-shadow:var(--shadow);}
+.type-hero .thmascot{font-size:86px; line-height:1; filter:drop-shadow(0 4px 10px rgba(0,0,0,.15));}
+.type-hero .thno{font-size:23px; font-weight:700; opacity:.9;}
+.type-hero .thname{font-size:44px; font-weight:800; letter-spacing:-.03em; margin:2px 0 6px;}
+.type-hero .thcatch{font-size:25px; opacity:.95; line-height:1.32; font-weight:600; white-space:pre-line;}
+
+/* IgG 음식 요약 */
+.zone-summary{display:flex; gap:14px;}
+.zone-pill{flex:1; border-radius:20px; padding:18px 14px; text-align:center; border:2px solid;}
+.zone-pill .zn{font-size:24px; font-weight:800;} .zone-pill .zc{font-size:42px; font-weight:800; line-height:1.05;} .zone-pill .zu{font-size:19px; font-weight:700; opacity:.7;}
+.foodchips{display:flex; flex-wrap:wrap; gap:11px;}
+.foodchip{display:flex; align-items:center; gap:9px; padding:13px 22px; border-radius:18px; font-size:27px; font-weight:700; border:2px solid var(--line); background:#fff;}
+.foodchip .g{width:16px; height:16px; border-radius:50%; flex-shrink:0;}
+.subhead{font-size:23px; font-weight:800; color:var(--n-700); margin:16px 0 10px; display:flex; align-items:center; gap:8px;}
+
+/* CMFA 레이더 + 심각도 정렬 지표 리스트 */
+.radar-wrap{display:flex; align-items:center; gap:14px;}
+svg.radar{width:420px; height:380px; flex-shrink:0;}
+.radar-legend{display:flex; flex-direction:column; gap:12px; font-size:23px; color:var(--txt-dim); font-weight:700;}
+.radar-legend span{display:flex; align-items:center; gap:10px;} .radar-legend i{width:16px; height:16px; border-radius:50%;}
+.axis-list{display:flex; flex-direction:column; gap:10px;}
+.axis-row{display:flex; align-items:center; gap:16px; padding:16px 20px; border-radius:18px; background:var(--n-50); border:1px solid var(--line);}
+.axis-row .adot{width:20px; height:20px; border-radius:50%; flex-shrink:0;}
+.axis-row .an{font-size:29px; font-weight:800; color:var(--n-900);}
+.axis-row .az{margin-left:auto; font-size:24px; font-weight:800; padding:8px 18px; border-radius:14px;}
+.axis-row .anote{font-size:22px; color:var(--txt-dim); font-weight:600;}
+
+/* 우선순위 */
+.prio{display:flex; align-items:center; gap:18px; padding:18px 22px; border-radius:20px; margin-bottom:12px; background:var(--n-50); border:1px solid var(--line);}
+.prio .rank{width:56px; height:56px; border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:800; flex-shrink:0; color:#fff;}
+.prio .pn{font-size:29px; font-weight:800; color:var(--n-900);} .prio .pd{font-size:22px; color:var(--txt-dim); font-weight:600;}
+
+/* 제품 카드(3열 수납) */
+.prod-row{display:flex; gap:16px;}
+.prod{flex:1; min-width:0; background:#fff; border:1px solid var(--line); border-radius:22px; overflow:hidden; box-shadow:var(--shadow-sm);}
+.prod .pimg{width:100%; height:150px; object-fit:cover; background:var(--n-50); display:block;}
+.prod .pbody{padding:16px 16px 18px;}
+.prod .prank{display:inline-block; font-size:18px; font-weight:800; color:var(--mint-600); background:var(--mint-50); padding:5px 12px; border-radius:10px; margin-bottom:8px;}
+.prod .pnm{font-size:25px; font-weight:800; color:var(--n-900); line-height:1.2; margin-bottom:6px; letter-spacing:-.02em;}
+.prod .pk{font-size:20px; color:var(--txt-dim); line-height:1.3; font-weight:500; margin-bottom:10px; min-height:52px;}
+.prod .pprice{font-size:26px; font-weight:800; color:var(--n-900); white-space:nowrap;}
+.prod .pprice s{display:block; font-size:18px; color:var(--n-300); font-weight:600; margin-bottom:1px;}
+
+/* 도시락(2열) */
+.meal-row{display:flex; gap:16px;}
+.meal{flex:1; min-width:0; background:#fff; border:1px solid var(--line); border-radius:22px; overflow:hidden; box-shadow:var(--shadow-sm); display:flex;}
+.meal .mimg{width:150px; height:150px; object-fit:cover; background:var(--n-50); flex-shrink:0;}
+.meal .mbody{padding:16px 18px; display:flex; flex-direction:column; justify-content:center;}
+.meal .mtag{display:inline-block; font-size:17px; font-weight:700; color:var(--watch); background:var(--watch-bg); padding:5px 11px; border-radius:9px; margin-bottom:8px; align-self:flex-start;}
+.meal .mnm{font-size:25px; font-weight:800; color:var(--n-900); line-height:1.2; margin-bottom:8px; letter-spacing:-.02em;}
+.meal .mnut{display:flex; gap:14px; font-size:20px; color:var(--txt-dim); font-weight:600;}
+.meal .mnut b{color:var(--n-800);}
+
+.swaps{display:flex; flex-direction:column; gap:12px;}
+.swap{display:flex; align-items:center; gap:14px; font-size:26px; font-weight:700;}
+.swap .from{color:var(--caution);} .swap .to{color:var(--good);} .swap .arw{color:var(--n-300); font-size:28px;}
+.routine{font-size:25px; line-height:1.45; color:var(--n-800); background:var(--mint-50); border-left:5px solid var(--mint); padding:18px 22px; border-radius:12px; font-weight:600;}
+.careset{display:flex; align-items:center; gap:16px; padding:22px 26px; border-radius:22px; background:linear-gradient(120deg,var(--mint-50),#fff); border:2px solid var(--mint-100);}
+.careset .cs-t{font-size:23px; font-weight:800; color:var(--n-900);} .careset .cs-p{font-size:36px; font-weight:800; color:var(--mint-600);}
+.careset .cs-p s{font-size:23px; color:var(--n-300); font-weight:600; margin-right:10px;}
+.careset .cs-l{flex:1;}
+
+/* ============ 베네핏 ============ */
+#s-benefit{text-align:center; padding-top:96px;}
+.coffee-hero{margin:2px auto 20px; display:flex; flex-direction:column; align-items:center;}
+.coffee-hero .cup{font-size:130px; animation:pulse 2.4s infinite;}
+.benefit-list{display:flex; flex-direction:column; gap:16px; margin-top:10px; text-align:left;}
+.benefit{display:flex; align-items:center; gap:22px; padding:26px 30px; border-radius:26px; background:#fff; border:1px solid var(--line); box-shadow:var(--shadow-sm);}
+.benefit.hi{border:2px solid var(--gold); background:linear-gradient(120deg,var(--mid-bg),#fff);}
+.benefit .bi{font-size:56px; width:78px; text-align:center; flex-shrink:0;}
+.benefit .bt{font-size:32px; font-weight:800; color:var(--n-900); margin-bottom:5px; letter-spacing:-.02em;}
+.benefit .bd{font-size:23px; color:var(--txt-dim); line-height:1.35; font-weight:500;}
+
+/* 유휴 */
+.idle{position:absolute; inset:0; z-index:90; background:rgba(243,245,247,.94); display:none; flex-direction:column; align-items:center; justify-content:center; text-align:center; backdrop-filter:blur(4px);}
+.idle.show{display:flex;}
+.idle .num{font-size:220px; font-weight:800; color:var(--mint); line-height:1;}
+.idle p{font-size:34px; color:var(--txt-dim); font-weight:600;}
+#demo-badge{position:fixed; left:10px; bottom:10px; z-index:200; font-size:12px; color:#cfe; background:rgba(0,0,0,.55); padding:8px 12px; border-radius:10px; max-width:360px; line-height:1.4;}
+</style>
+</head>
+<body>
+<div id="viewport"><div id="kiosk">
+
+  <div class="topbar"><div class="disclaimer">🎈 재미로 보는 가이드예요 · <b>의학적 진단이 아니에요</b></div></div>
+  <div class="stepper hidden" id="stepper"></div>
+
+  <!-- 0. 홈 -->
+  <section class="screen" id="s-home">
+    <div class="home-video">
+      <video id="introVideo" autoplay muted loop playsinline poster="" style="display:none"></video>
+      <div class="vfallback" id="vfallback"><div class="brand">bico</div><div class="tag">내 몸을 읽는 정밀 분석, 바이오컴</div></div>
+    </div>
+    <div class="promo-band"><div class="pc" id="homeCap">먹는 것부터 대사 밸런스까지,<br>데이터로 나를 봅니다</div></div>
+    <div class="home-bottom">
+      <div class="kick">✨ 부스에서 직접, 무료로</div>
+      <h1>지금 여기서<br>내 분석 받아보세요</h1>
+      <div class="desc">1분이면 충분해요. 화면을 터치하고<br>나에게 맞는 분석을 찾아보세요.</div>
+      <img class="mascot" src="assets/brand/mascot-cat.png" alt="bico">
+      <div class="footsteps"><div class="foot">👣</div><div class="foot">👣</div></div>
+      <div class="tap-hint" onclick="startFlow()">👆 터치하고 시작하기</div>
+    </div>
+  </section>
+
+  <!-- 니즈 -->
+  <section class="screen" id="s-needs">
+    <div class="sub">🎁 30초 · AI가 나에게 딱 맞는 분석을 찾아드려요</div>
+    <h1 style="margin-top:20px">요즘, 나한테<br>제일 챙겨주고 싶은 건?</h1>
+    <div class="sub">하나만 톡! 눌러주세요</div>
+    <div class="choices" id="needsChoices"></div>
+  </section>
+
+  <!-- 문진 3문항 -->
+  <section class="screen" id="s-q">
+    <div class="sub" id="qKicker"></div>
+    <h1 id="qTitle" style="margin-top:16px"></h1>
+    <div class="choices" id="qChoices"></div>
+  </section>
+
+  <!-- 서비스 선택(슬롯) -->
+  <section class="screen" id="s-select">
+    <div class="sub">🔎 바이오컴 분석 중에서 딱 맞는 걸 골라드릴게요</div>
+    <h1 style="margin-top:14px">당신에게 맞는 분석은?</h1>
+    <div class="spinner">
+      <div class="spin-track" id="spinTrack"></div>
+      <div class="spin-center"></div>
+    </div>
+    <div class="spin-result" id="spinResult">
+      <div class="rlabel">✨ 당신에게 추천하는 분석</div>
+      <div class="rname" id="spinName">—</div>
+      <div class="rmini" id="spinMini"></div>
+      <button class="btn btn-primary btn-lg" id="spinBtn" style="max-width:620px; margin:28px auto 0" onclick="onSpinProceed()">이 분석으로 진행하기 →</button>
+    </div>
+  </section>
+
+  <!-- 검체 -->
+  <section class="screen" id="s-specimen">
+    <h1 id="specTitle" style="text-align:center; font-size:50px; margin-top:6px"></h1>
+    <div class="sub" id="specSub" style="text-align:center; margin-bottom:6px"></div>
+    <div class="spec-stage" id="specStage"></div>
+    <button class="btn btn-primary btn-lg" id="specBtn" style="max-width:620px; margin:6px auto 0" onclick="collectSpecimen()">검체 받기</button>
+  </section>
+
+  <!-- 스캔 -->
+  <section class="screen" id="s-scan">
+    <h1 style="text-align:center; margin-bottom:18px; font-size:50px">AI가 분석하고 있어요</h1>
+    <div class="scan-box" id="scanBox">
+      <div class="ph" id="scanPh"><div class="silhouette">🧍</div><div>카메라 준비 중…</div></div>
+      <div class="scan-grid"></div>
+      <div class="scan-corner sc-tl"></div><div class="scan-corner sc-tr"></div><div class="scan-corner sc-bl"></div><div class="scan-corner sc-br"></div>
+      <div class="laser" id="laser"></div>
+    </div>
+    <div class="scan-status"><span class="dots">분석 중</span></div>
+  </section>
+
+  <!-- 리포트/솔루션 -->
+  <section class="screen" id="s-result">
+    <div class="result-tabs">
+      <button id="tabReport" class="on" onclick="showPage('report')">📄 내 리포트</button>
+      <button id="tabSolution" onclick="showPage('solution')">💡 맞춤 솔루션</button>
+    </div>
+    <div class="rpages"><div class="rpage on" id="page-report"></div><div class="rpage" id="page-solution"></div></div>
+  </section>
+
+  <!-- 베네핏 -->
+  <section class="screen" id="s-benefit">
+    <div class="coffee-hero"><div class="cup">☕</div><h1 style="margin-top:6px">부스로 오시면,</h1>
+      <div class="sub">앱 설치하고 <b class="accent">드립커피 한 잔</b> 받아가세요 (따뜻/아이스)</div></div>
+    <div class="benefit-list">
+      <div class="benefit hi"><div class="bi">☕</div><div><div class="bt">앱 다운로드 → 드립커피 증정</div><div class="bd">따뜻하게, 시원하게 — 원하는 대로. 지금 바로 받아가세요.</div></div></div>
+      <div class="benefit"><div class="bi">🔬</div><div><div class="bt">5종 분석 서비스 상세 소개</div><div class="bd">음식물 과민증 · 종합 대사기능 등 5종 분석 서비스와 샘플 리포트·솔루션을 담당자가 자세히 설명해 드려요.</div></div></div>
+      <div class="benefit"><div class="bi">🍱</div><div><div class="bt">맞춤 건기식 · 도시락 체험</div><div class="bd">내 결과에 맞춘 보충제와 저당·저속노화 도시락을 직접 보고 맛볼 수 있어요.</div></div></div>
+      <div class="benefit"><div class="bi">📱</div><div><div class="bt">앱 챌린지 참여</div><div class="bd">21일 이너뷰티 챌린지로 분석 이후의 변화까지 이어가세요.</div></div></div>
+    </div>
+  </section>
+
+  <!-- 처음으로(우하단 독립) + 결과화면 부스 CTA(하단 좌측, 나란히) -->
+  <button class="homebtn hidden" id="homeBtn" onclick="goHome()">🏠 처음으로</button>
+  <div class="booth-cta hidden" id="boothCta">
+    <div class="bcta-mini">☕ 부스에서 자세히 보고, 커피 한 잔 받아가세요</div>
+    <button class="btn btn-primary bcta-btn" onclick="go('s-benefit')">☕ 자세히 보고 · 커피 받으러 가기 (부스)</button>
+  </div>
+
+  <!-- 유휴 -->
+  <div class="idle" id="idle">
+    <img src="assets/brand/mascot-cat.png" style="width:130px;height:130px;object-fit:contain;margin-bottom:12px">
+    <div class="num" id="idleNum">10</div><p>잠시 후 처음 화면으로 돌아갑니다</p>
+    <button class="btn btn-primary btn-lg" style="width:auto;padding:0 64px;margin-top:34px" onclick="resetIdle()">계속 볼게요</button>
+  </div>
+
+  <div id="demo-badge">데모 v3 · 9:16 무스크롤 · 실제 제품/이미지 · 슬롯 추천 · 하단밴드(주버튼+처음으로)</div>
+</div></div>
+
+<script>
+const CFG={ IDLE_MS:100000, COUNTDOWN_MS:10000, SCAN_MS:5200 };
+
+/* ===== 실제 제품 ===== */
+const SUP={
+  darae:{n:'다래케어',img:'assets/products/SUPP_DARAE_CARE.png',price:68400,orig:120000,key:'다래추출물·아연 · 면역 과민반응 개선'},
+  bio:{n:'바이오 밸런스',img:'assets/products/SUPP_BIO_BALANCE.jpg',price:39000,orig:60000,key:'마그네슘·아연·셀레늄 · 피로회복 미네랄'},
+  clean:{n:'클린 밸런스',img:'assets/products/SUPP_CLEAN_BALANCE.png',price:49000,orig:75000,key:'클로렐라·활성엽산 · 피부 이너뷰티'},
+  dang:{n:'당당케어',img:'assets/products/SUPP_DANGDANG.png',price:59800,orig:100000,key:'바나바잎·가르시니아·크롬 · 혈당관리'},
+  neuro:{n:'뉴로마스터',img:'assets/products/SUPP_NEURO_MASTER.png',price:35000,orig:60000,key:'은행잎추출물·요오드 · 혈행/기억력'},
+  young:{n:'영데이즈',img:'assets/products/SUPP_YOUNG_DAYS.png',price:36000,orig:45000,key:'SOD효소·리포좀 글루타치온 · 저속노화'},
+  reset:{n:'리셋데이',img:'assets/products/SUPP_RESET_DAY.png',price:24900,orig:36000,key:'글루텐분해효소·차전자피·낙산균 · 장 건강'},
+  meta:{n:'메타드림',img:'assets/products/SUPP_METADREAM.jpg',price:36900,orig:46000,key:'멜라토닌·테아닌·마그네슘 · 수면'},
+  sun:{n:'썬화이버',img:'assets/products/SUPP_SUNFIBER.jpg',price:36000,orig:57000,key:'구아검가수분해물 · 저포드맵 프리바이오틱스'},
+};
+const MEAL={
+  samgye:{n:'순살 삼계찜닭 & 두부',img:'assets/products/MEAL_LOW_FODMAP_06.webp',tag:'저포드맵',cal:342,pro:25},
+  galbi:{n:'순살 갈비찜 & 두부',img:'assets/products/MEAL_LOW_FODMAP_03.webp',tag:'저포드맵',cal:342,pro:26},
+  salmon:{n:'미소버터 연어 조림',img:'assets/products/MEAL_SLOW_AGING_05.webp',tag:'저속노화',cal:286,pro:20},
+  cod:{n:'시트러스 대구',img:'assets/products/MEAL_SLOW_AGING_02.webp',tag:'저속노화',cal:311,pro:19},
+  lasagna:{n:'저당 두부면 라자냐',img:'assets/products/MEAL_ORIGINAL_08.webp',tag:'저당·오리지널',cal:604,pro:57},
+  beef:{n:'소고기 버섯 들깨 덮밥',img:'assets/products/LUNCHBOX_1758684009530_7.webp',tag:'오리지널 · 저탄수',cal:608,pro:36},
+  jeyuk:{n:'기사식당 최강 제육',img:'assets/products/LUNCHBOX_1758684009530_5.webp',tag:'시그니처',cal:598,pro:34},
+};
+/* 분석 서비스 6종(슬롯) */
+const SERVICES=[
+  {n:'음식물 과민증 분석',img:'assets/products/HC_FOOD_INTOLERANCE.png',svc:'igg'},
+  {n:'장내세균 분석',img:'assets/products/HC_GUT_BACTERIA.png'},
+  {n:'종합 호르몬균형 분석',img:'assets/products/HC_HORMONE_BALANCE.png'},
+  {n:'종합 대사기능 분석',img:'assets/products/HC_METABOLISM.jpg',svc:'cmfa'},
+  {n:'영양 중금속 분석',img:'assets/products/HC_NUTRITION_HEAVY_METAL.png'},
+  {n:'스트레스 노화 분석',img:'assets/products/HC_STRESS_AGING.png'},
+];
+
+/* ===== 시나리오 더미(공식 IgG 매핑) ===== */
+const DUMMY_IGG=[
+  { key:'IMMUNE', mascot:'🦔', typeNo:'2유형', typeName:'면역 과민 반응형', catch:'면역 시스템의\n밸런스를 찾아야 해요.', color:'#7C5CFF',
+    zones:{good:9,mid:3,warn:4}, warn:['우유','체다치즈','요거트','달걀흰자'], mid:['버터','새우','게'], good:['현미','브로콜리','닭가슴살','고구마'],
+    swaps:[['우유·요거트','식물성 음료'],['체다치즈','두부·식물성 치즈']],
+    prods:[[SUP.darae,'추천 1순위'],[SUP.bio,'추천 2순위'],[SUP.clean,'추천 3순위']], meals:[MEAL.samgye,MEAL.salmon],
+    routine:'유제품을 2주만 줄이고 속 편안함·피부 컨디션 변화를 체크해 보세요.', setPrice:156400, setOrig:255000 },
+  { key:'GUT', mascot:'🐧', typeNo:'1유형', typeName:'장 건강 저하형', catch:'장속 가스 폭풍을\n잔잔 모드로 돌려야 해요.', color:'#12A09A',
+    zones:{good:8,mid:4,warn:4}, warn:['밀','통밀','보리','효모'], mid:['호밀','귀리','옥수수','당면'], good:['쌀','감자','당근','두부'],
+    swaps:[['밀가루 면·빵','쌀·두부면·글루텐프리'],['보리차','옥수수차·루이보스']],
+    prods:[[SUP.bio,'추천 1순위'],[SUP.clean,'추천 2순위'],[SUP.reset,'조건부 · 글루텐']], meals:[MEAL.galbi,MEAL.beef],
+    routine:'‘글루텐 프리 리셋데이’를 주 2회 정해 4주 체험 후 컨디션을 비교해 보세요.', setPrice:147800, setOrig:235000 },
+  { key:'SKIN', mascot:'🦊', typeNo:'5유형', typeName:'염증형', catch:'몸속 불씨를\n진정 모드로 돌려야 해요.', color:'#F04545',
+    zones:{good:10,mid:2,warn:4}, warn:['아몬드','달걀노른자','땅콩','캐슈넛'], mid:['호두','잣'], good:['쌀','닭고기','양배추','블루베리'],
+    swaps:[['아몬드·캐슈넛','호박씨·해바라기씨'],['달걀 요리','두부 스크램블']],
+    prods:[[SUP.bio,'추천 1순위'],[SUP.clean,'추천 2순위'],[SUP.young,'추천 3순위']], meals:[MEAL.salmon,MEAL.cod],
+    routine:'견과·달걀을 2주 줄이고 피부 트러블·컨디션 변화를 기록해 보세요.', setPrice:124000, setOrig:180000 },
+  { key:'META', mascot:'🐻‍❄️', typeNo:'4유형', typeName:'대사 저하형', catch:'저전력 모드를\n체계적으로 관리해야 해요.', color:'#157D78',
+    zones:{good:13,mid:5,warn:0}, warnMild:true, warn:[], mid:['달걀흰자','우유','대두','새우','밀'], good:['쌀','닭가슴살','브로콜리','고구마'],
+    swaps:[['우유','식물성 우유'],['대두 단백','완두·쌀 단백']],
+    prods:[[SUP.dang,'추천 1순위'],[SUP.neuro,'추천 2순위'],[SUP.bio,'추천 3순위']], meals:[MEAL.beef,MEAL.jeyuk],
+    routine:'특정 음식을 끊기보다, 골고루 먹으며 대사 밸런스를 챙기는 데 집중해 보세요.', setPrice:133800, setOrig:220000 },
+];
+const AX=['체중조절능력','장 건강','독소 스트레스','항산화 능력','정신건강 및 집중력','유전자 기능'];
+const AX_SHORT=['체중조절','장 건강','독소 케어','항산화','정신·집중','유전자'];
+const DUMMY_CMFA=[
+  { key:'MIND', focus:'정신건강 및 집중력', mascot:'🧠', zones:['mid','good','good','watch','watch','good'],
+    prio:[['정신건강 · 집중/스트레스','watch'],['항산화 · 산화 스트레스','watch'],['체중 · 대사 효율','mid']],
+    prods:[[SUP.meta,'수면·이완'],[SUP.neuro,'집중·혈행']], meal:MEAL.beef, diet:'저GI 식단', life:'수면 위생·오후 리듬',
+    routine:'취침 1시간 전 화면을 줄이고, 오후엔 카페인 대신 산책으로 리듬을 잡아보세요.', setPrice:71900, setOrig:106000 },
+  { key:'GUT', focus:'장 건강', mascot:'🌱', zones:['watch','watch','watch','mid','good','good'],
+    prio:[['장 · 장내 환경/소화','watch'],['독소 · 해독 부담','watch'],['체중 · 대사 효율','watch']],
+    prods:[[SUP.reset,'장 건강'],[SUP.sun,'프리바이오틱스']], meal:MEAL.galbi, diet:'장 친화 저자극·발효식', life:'규칙적 식사·야식 줄이기',
+    routine:'식사 시간을 일정하게 하고, 발효식(김치·요거트)을 하루 한 번 곁들여 보세요.', setPrice:60900, setOrig:93000 },
+  { key:'WEIGHT', focus:'체중조절능력', mascot:'⚖️', zones:['watch','mid','watch','watch','good','good'],
+    prio:[['체중 · 혈당/대사','watch'],['항산화 · 산화 스트레스','watch'],['독소 · 해독 부담','watch']],
+    prods:[[SUP.dang,'혈당·대사'],[SUP.sun,'포만감·식이섬유']], meal:MEAL.lasagna, diet:'저당·가당음료 줄이기', life:'좌식 줄이기·틈새 활동',
+    routine:'가당음료를 물·탄산수로 바꾸고, 한 시간에 한 번은 일어나 움직여 보세요.', setPrice:95800, setOrig:157000 },
+  { key:'ANTIOX', focus:'항산화 능력', mascot:'✨', zones:['good','good','mid','mid','good','good'],
+    prio:[['항산화 · 산화 스트레스','mid'],['독소 · 해독 부담','mid'],['체중 · 대사 효율(유지)','good']],
+    prods:[[SUP.young,'글루타치온·SOD'],[SUP.clean,'피부 이너뷰티']], meal:MEAL.cod, diet:'컬러푸드(채소·과일·베리)', life:'반주 줄이기·수분',
+    routine:'전반적으로 좋아요! 컬러푸드를 한 끼에 한 가지씩 더해 지금 컨디션을 유지해 보세요.', setPrice:85000, setOrig:120000 },
+];
+
+/* ===== 문진 ===== */
+const NEEDS={ opts:[
+  {emo:'🍽️',label:'먹는 것 · 속 편함',branch:'A',a:2,b:0},
+  {emo:'⚡',label:'에너지 · 컨디션 · 밸런스',branch:'B',a:0,b:2},
+  {emo:'🤩',label:'다 궁금해요!',branch:'Both',a:0,b:0},
+]};
+const BRANCH={
+  A:{ kicker:'🍽️ 먹는 것 · 속 편함', qs:[
+    { t:'요즘 내 식탁, 어떤 그림에 가까워요?', opts:[
+      {emo:'🍞',label:'빵·면 자주',a:1,b:0},{emo:'🧀',label:'우유·치즈·요거트 자주',a:1,b:0},
+      {emo:'🥗',label:'채소·과일·골고루',a:0,b:1},{emo:'🎲',label:'그날그날 랜덤',a:1,b:0} ]},
+    { t:"나와 '잘 맞는지' 궁금한 음식은?", persona:'igg', opts:[
+      {emo:'🧀',label:'우유·치즈·유제품',a:2,b:0,igg:0},{emo:'🍞',label:'빵·면·밀가루',a:2,b:0,igg:1},
+      {emo:'🥜',label:'견과·달걀',a:2,b:0,igg:2},{emo:'🙆',label:'딱히 없어요 · 다 잘 먹어요',a:0,b:1,igg:3} ]},
+    { t:'다음 중 제일 반가운 결과지는?', opts:[
+      {emo:'🚫',label:'나와 안 맞는 음식 리스트',a:2,b:0},{emo:'🥗',label:'몸에 맞는 대체 식단',a:2,b:0},
+      {emo:'📡',label:'6가지 밸런스 레이더',a:0,b:2},{emo:'🗺️',label:'우선순위 케어 로드맵',a:0,b:2} ]},
+  ]},
+  B:{ kicker:'⚡ 에너지 · 컨디션', qs:[
+    { t:'아침에 눈 떴을 때, 나는?', opts:[
+      {emo:'😎',label:'개운·바로 기상',a:0,b:0},{emo:'🥱',label:'이불속 5분만',a:0,b:1},
+      {emo:'🐢',label:'오후까지 예열',a:0,b:1},{emo:'🎲',label:'복불복',a:0,b:1} ]},
+    { t:'요즘 가장 아쉬운 컨디션은?', persona:'cmfa', opts:[
+      {emo:'😴',label:'잠·집중·멍함',a:0,b:2,cmfa:0},{emo:'🌀',label:'소화·속 더부룩',a:1,b:1,cmfa:1},
+      {emo:'⚖️',label:'체중·붓기·군살',a:0,b:2,cmfa:2},{emo:'🔋',label:'활력·회복·피부칙칙',a:0,b:2,cmfa:3} ]},
+    { t:'결과지에서 먼저 보고 싶은 건?', opts:[
+      {emo:'🚫',label:'나와 안 맞는 음식 리스트',a:2,b:0},{emo:'📡',label:'6가지 밸런스 레이더',a:0,b:2},
+      {emo:'⏰',label:'에너지·집중 루틴',a:0,b:2},{emo:'🌿',label:'속 편하게 먹는 법',a:1,b:1} ]},
+  ]},
+  Both:{ kicker:'🤩 다 궁금해요', qs:[
+    { t:"나와 '잘 맞는지' 궁금한 음식은?", persona:'igg', opts:[
+      {emo:'🧀',label:'우유·치즈·유제품',a:2,b:0,igg:0},{emo:'🍞',label:'빵·면·밀가루',a:2,b:0,igg:1},
+      {emo:'🥜',label:'견과·달걀',a:2,b:0,igg:2},{emo:'🙆',label:'딱히 없어요',a:0,b:1,igg:3} ]},
+    { t:'요즘 가장 아쉬운 컨디션은?', persona:'cmfa', opts:[
+      {emo:'😴',label:'잠·집중·멍함',a:0,b:2,cmfa:0},{emo:'🌀',label:'소화·속 더부룩',a:1,b:1,cmfa:1},
+      {emo:'⚖️',label:'체중·붓기·군살',a:0,b:2,cmfa:2},{emo:'🔋',label:'활력·회복·피부칙칙',a:0,b:2,cmfa:3} ]},
+    { t:'이런 결과지 받으면 신나요!', opts:[
+      {emo:'🍽️',label:'나만의 음식 궁합표',a:2,b:0},{emo:'📊',label:'종합 밸런스 레이더',a:0,b:2},
+      {emo:'🚫',label:'피해야 할 음식 순위',a:2,b:0},{emo:'🗺️',label:'우선순위 케어 로드맵',a:0,b:2} ]},
+  ]},
+};
+const ZONE={ good:{c:'#12BA7E',bg:'#E9FBF5',t:'좋음'}, mid:{c:'#E3A700',bg:'#FFF8D8',t:'보통'}, watch:{c:'#F67900',bg:'#FFF4EA',t:'관심'} };
+const FZONE={ good:'#12BA7E', mid:'#E3A700', warn:'#F67900' };
+const zoneScore={ good:88, mid:62, watch:42 };
+const zoneRank={ watch:0, mid:1, good:2 };
+
+/* ===== 세션 ===== */
+let S={};
+function resetSession(){ S={ branch:null, qi:0, a:0, b:0, iggPersona:null, cmfaPersona:null, recoSvc:null, chosen:null, shownIgg:false, shownCmfa:false, answers:[] }; }
+resetSession();
+function getIdx(svc){ try{ return parseInt(localStorage.getItem('biocom_'+svc+'_idx')||'0',10)%4; }catch(e){ return (window.__m&&window.__m[svc])||0; } }
+function bumpIdx(svc){ const nx=(getIdx(svc)+1)%4; try{ localStorage.setItem('biocom_'+svc+'_idx',String(nx)); }catch(e){ window.__m=window.__m||{}; window.__m[svc]=nx; } }
+
+/* ===== 웹캠(최초 1회) ===== */
+let CAM={ stream:null, tried:false };
+async function initCamera(){ if(CAM.tried) return; CAM.tried=true;
+  try{ CAM.stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:1280,height:1024},audio:false}); console.log('[kiosk] 웹캠 활성화(저장·전송 안 함)'); }
+  catch(e){ console.warn('[kiosk] 웹캠 불가 — 실루엣으로 진행. (http://localhost 권장)', e.name); } }
+function attachScanCam(){ const host=document.getElementById('scanBox');
+  if(CAM.stream){ let v=host.querySelector('video'); if(!v){ v=document.createElement('video'); v.autoplay=true; v.muted=true; v.playsInline=true; host.insertBefore(v,host.firstChild);} v.srcObject=CAM.stream; document.getElementById('scanPh').style.display='none'; }
+  else document.getElementById('scanPh').style.display='flex'; }
+
+/* ===== 화면 전환 + 하단 액션밴드 ===== */
+const SCREENS=['s-home','s-needs','s-q','s-select','s-specimen','s-scan','s-result','s-benefit'];
+let current='s-home';
+function go(id){
+  SCREENS.forEach(s=>document.getElementById(s).classList.toggle('active', s===id));
+  current=id;
+  const stepper=document.getElementById('stepper');
+  document.getElementById('homeBtn').classList.toggle('hidden', id==='s-home');   // 처음으로: 홈 제외 전 화면 우하단
+  document.getElementById('boothCta').classList.toggle('hidden', id!=='s-result'); // 부스 CTA: 결과 화면만
+  if(id==='s-needs'){ renderStepper(1); stepper.classList.remove('hidden'); }
+  else if(id==='s-q'){ renderStepper(2+S.qi); stepper.classList.remove('hidden'); }
+  else stepper.classList.add('hidden');
+  if(id==='s-home') stopIdle(); else resetIdle();
+}
+function renderStepper(n){ const el=document.getElementById('stepper'); el.innerHTML=''; for(let i=1;i<=4;i++){ const d=document.createElement('div'); d.className='dot'+(i<=n?' on':''); el.appendChild(d);} }
+
+const CAPS=['먹는 것부터 대사 밸런스까지,<br>데이터로 나를 봅니다','지나가지 마세요!<br>1분이면 내 분석이 나와요','내 몸엔 어떤 음식이 맞을까?<br>지금 확인해 보세요'];
+let capI=0; setInterval(()=>{ if(current==='s-home'){ capI=(capI+1)%CAPS.length; const el=document.getElementById('homeCap'); el.style.opacity=0; setTimeout(()=>{ el.innerHTML=CAPS[capI]; el.style.opacity=1; },400);} },4200);
+
+/* ===== 플로우 ===== */
+function startFlow(){ resetSession(); enterNeeds(); }
+function goHome(){ resetSession(); go('s-home'); }
+function enterNeeds(){ const box=document.getElementById('needsChoices'); box.innerHTML='';
+  NEEDS.opts.forEach((o,i)=>{ const el=div('choice'); el.innerHTML=`<div class="emo">${o.emo}</div><div>${o.label}</div><div class="chev">›</div>`; el.onclick=()=>pickNeeds(i); box.appendChild(el); });
+  go('s-needs'); }
+function pickNeeds(i){ const o=NEEDS.opts[i]; S.branch=o.branch; S.a=o.a; S.b=o.b; S.qi=0; S.answers=[]; renderQ(); go('s-q'); }
+function renderQ(){ const br=BRANCH[S.branch], q=br.qs[S.qi];
+  document.getElementById('qKicker').textContent=`${br.kicker} · ${S.qi+1}/3`;
+  document.getElementById('qTitle').textContent=q.t;
+  const box=document.getElementById('qChoices'); box.innerHTML='';
+  q.opts.forEach((o,i)=>{ const el=div('choice'); el.innerHTML=`<div class="emo">${o.emo}</div><div>${o.label}</div><div class="chev">›</div>`; el.onclick=()=>pickQ(i); box.appendChild(el); });
+  renderStepper(2+S.qi); }
+function pickQ(i){ const q=BRANCH[S.branch].qs[S.qi], o=q.opts[i]; S.a+=o.a; S.b+=o.b;
+  if(q.persona==='igg'&&o.igg!=null) S.iggPersona=o.igg; if(q.persona==='cmfa'&&o.cmfa!=null) S.cmfaPersona=o.cmfa;
+  S.answers.push({qi:S.qi,i}); if(S.qi<2){ S.qi++; renderQ(); } else toSelect(); }
+
+/* 서비스 선택 — 슬롯 애니메이션 */
+function toSelect(){ const diff=S.a-S.b; const reco=Math.abs(diff)>=1?(diff>0?'igg':'cmfa'):(S.branch==='B'?'cmfa':'igg'); S.recoSvc=reco; go('s-select'); runSpin(reco); }
+function spinCardHTML(s){ return `<div class="spin-card"><img src="${s.img}" alt=""><div class="sn">${s.n}</div></div>`; }
+function onSpinProceed(){ startSpecimen(S.recoSvc); }
+function runSpin(reco){
+  const track=document.getElementById('spinTrack'), result=document.getElementById('spinResult');
+  result.classList.remove('show');
+  const CARD=336, GAP=24, LOOPS=7, recoIdx=SERVICES.findIndex(s=>s.svc===reco);
+  let html=''; for(let l=0;l<LOOPS;l++){ SERVICES.forEach(s=>html+=spinCardHTML(s)); } track.innerHTML=html;
+  const vw=document.querySelector('.spinner').clientWidth;
+  const targetIndex=(LOOPS-2)*SERVICES.length+recoIdx;              // 뒤쪽 루프에서 정지
+  const targetX=-(targetIndex*(CARD+GAP)+CARD/2-vw/2);
+  track.style.transition='none'; track.style.transform='translateX(0)'; void track.offsetWidth;
+  track.style.transition='transform 4s cubic-bezier(.12,.66,.1,1)'; track.style.transform='translateX('+targetX+'px)';
+  setTimeout(()=>{ [...track.children].forEach((c,idx)=>c.classList.toggle('on', idx===targetIndex));
+    const svc=SERVICES[recoIdx]; document.getElementById('spinName').textContent=svc.n;
+    document.getElementById('spinMini').textContent = reco==='igg' ? '손끝 혈액 한 방울로 · 나와 맞는 음식을 확인해요' : '유기산 검체로 · 6가지 대사 밸런스를 확인해요';
+    result.classList.add('show');   // 인라인 진행 버튼(spinBtn) 노출
+  }, 4150);
+}
+
+/* 검체 */
+function startSpecimen(svc){ S.chosen=svc; const stage=document.getElementById('specStage');
+  if(svc==='igg'){ document.getElementById('specTitle').textContent='손끝에서 혈액 한 방울';
+    document.getElementById('specSub').textContent='아래 ‘검체 받기’를 누르면 DBS 카드에 혈액이 스며들어요';
+    stage.innerHTML=`<div class="finger">👆</div><div class="blood-drop" id="drop"></div><div class="dbs"><div class="fill" id="dbsFill"></div><div class="lbl">DBS · 혈액 흡수 카드</div></div>`;
+  }else{ document.getElementById('specTitle').textContent='검체 튜브에 담기';
+    document.getElementById('specSub').textContent='아래 ‘검체 받기’를 누르면 유기산 검체가 담겨요';
+    stage.innerHTML=`<div class="tube"><div class="cap"></div><div class="ticks"><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="liquid" id="tubeLiquid"></div></div>`;
+  }
+  document.getElementById('specBtn').style.display=''; go('s-specimen'); }
+function collectSpecimen(){ document.getElementById('specBtn').style.display='none';
+  if(S.chosen==='igg'){ document.getElementById('drop').classList.add('fall'); let f=0; const fill=document.getElementById('dbsFill');
+    setTimeout(()=>{ const iv=setInterval(()=>{ f+=0.045; fill.style.transform='translate(-50%,-50%) scale('+Math.min(f,1)+')'; if(f>=1){ clearInterval(iv); setTimeout(startScan,500);} },40); },900);
+  }else{ let f=0; const liq=document.getElementById('tubeLiquid'); const iv=setInterval(()=>{ f+=3; liq.style.height=Math.min(f,90)+'%'; if(f>=90){ clearInterval(iv); setTimeout(startScan,600);} },70); } }
+
+/* 스캔 */
+function startScan(){ go('s-scan'); attachScanCam(); const l=document.getElementById('laser'); l.classList.remove('run'); void l.offsetWidth; l.classList.add('run'); setTimeout(showResult, CFG.SCAN_MS); }
+
+/* 결과 */
+function showResult(){ const svc=S.chosen; let idx;
+  if(svc==='igg') idx=S.iggPersona!=null?S.iggPersona:getIdx('igg'); else idx=S.cmfaPersona!=null?S.cmfaPersona:getIdx('cmfa');
+  const usedRotation=(svc==='igg'?S.iggPersona==null:S.cmfaPersona==null);
+  const shownKey=svc==='igg'?'shownIgg':'shownCmfa'; if(!S[shownKey]){ if(usedRotation) bumpIdx(svc); S[shownKey]=true; }
+  if(svc==='igg') renderIgg(DUMMY_IGG[idx]); else renderCmfa(DUMMY_CMFA[idx]);
+  showPage('report'); go('s-result'); }
+function showPage(p){ document.getElementById('page-report').classList.toggle('on', p==='report'); document.getElementById('page-solution').classList.toggle('on', p==='solution');
+  document.getElementById('tabReport').classList.toggle('on', p==='report'); document.getElementById('tabSolution').classList.toggle('on', p==='solution'); resetIdle(); }
+const won=n=>n.toLocaleString('ko-KR')+'원';
+function prodCard(p){ return `<div class="prod"><img class="pimg" src="${p[0].img}" alt=""><div class="pbody"><div class="prank">${p[1]}</div><div class="pnm">${p[0].n}</div><div class="pk">${p[0].key}</div><div class="pprice"><s>${won(p[0].orig)}</s>${won(p[0].price)}</div></div></div>`; }
+function mealCard(m){ return `<div class="meal"><img class="mimg" src="${m.img}" alt=""><div class="mbody"><span class="mtag">${m.tag}</span><div class="mnm">${m.n}</div><div class="mnut"><span><b>${m.cal}</b>kcal</span><span>단백 <b>${m.pro}</b>g</span></div></div></div>`; }
+function chip(name,color){ return `<div class="foodchip"><span class="g" style="background:${color}"></span>${name}</div>`; }
+function shade(hex){ const n=parseInt(hex.slice(1),16); let r=Math.max(0,(n>>16)-26),g=Math.max(0,((n>>8)&255)-26),b=Math.max(0,(n&255)-26); return '#'+((r<<16)|(g<<8)|b).toString(16).padStart(6,'0'); }
+
+function foodCard(emo, label, count, foods, color, bg, emptyMsg){
+  const inner = (foods&&foods.length) ? `<div class="foodchips">${foods.map(f=>chip(f,color)).join('')}</div>` : `<div class="sub" style="font-size:24px; color:${color}">${emptyMsg}</div>`;
+  return `<div class="card" style="border-left:8px solid ${color}">
+    <div class="ct"><span style="color:${color}">${emo} ${label}</span><span style="margin-left:auto; font-size:24px; color:${color}; background:${bg}; padding:6px 16px; border-radius:14px">${count}종</span></div>${inner}</div>`;
+}
+function renderIgg(d){ const z=d.zones;
+  document.getElementById('page-report').innerHTML=`
+    <div class="type-hero" style="background:linear-gradient(120deg,${d.color},${shade(d.color)})">
+      <div class="thmascot">${d.mascot}</div><div><div class="thno">이너뷰티 유형 · ${d.typeNo}</div><div class="thname">${d.typeName}</div><div class="thcatch">${d.catch}</div></div></div>
+    ${foodCard('🚫', d.warnMild?'주의 (강한 반응)':'주의가 필요한 음식', z.warn, d.warn, '#F67900', '#FFF4EA', '강한 반응 식품이 없어요 👍')}
+    ${foodCard('🟡', '보통 (옅은 반응)', z.mid, d.mid, '#E3A700', '#FFF8D8', '해당 없음')}
+    ${foodCard('💚', '나와 잘 맞는 음식', z.good, d.good, '#12BA7E', '#E9FBF5', '')}`;
+  document.getElementById('page-solution').innerHTML=`
+    <div class="card"><div class="ct">🔄 이렇게 바꿔보세요 (스마트 스왑)</div>
+      <div class="swaps">${d.swaps.map(s=>`<div class="swap"><span class="from">${s[0]}</span><span class="arw">→</span><span class="to">${s[1]}</span></div>`).join('')}</div></div>
+    <div class="card"><div class="ct">💊 ${d.typeName} 맞춤 포뮬러</div><div class="prod-row">${d.prods.map(prodCard).join('')}</div></div>
+    <div class="card"><div class="ct">🍱 내 몸에 맞는 도시락</div><div class="meal-row">${d.meals.map(mealCard).join('')}</div></div>
+    <div class="card"><div class="ct">🎁 맞춤 케어 SET</div><div class="careset"><div class="cs-l"><div class="cs-t">${d.typeName}을 위한 한 번에 케어</div><div class="cs-p"><s>${won(d.setOrig)}</s>${won(d.setPrice)}</div></div><div style="font-size:56px">🛒</div></div></div>`;
+}
+function zonePill(k,label,n){ const c=FZONE[k]||'#F67900'; const bg=k==='good'?'#E9FBF5':k==='mid'?'#FFF8D8':'#FFF4EA';
+  return `<div class="zone-pill" style="border-color:${c}33; background:${bg}"><div class="zn" style="color:${c}">${label}</div><div class="zc" style="color:${c}">${n}</div><div class="zu">종</div></div>`; }
+
+function renderCmfa(d){
+  const ranked=AX.map((name,i)=>({name, zone:d.zones[i]})).sort((a,b)=>zoneRank[a.zone]-zoneRank[b.zone]);
+  const noteOf=z=> z==='watch'?'조금 챙겨보면 좋아요':z==='mid'?'무난한 편이에요':'건강해요 👍';
+  document.getElementById('page-report').innerHTML=`
+    <div class="type-hero" style="background:linear-gradient(120deg,#22C3BC,#12A09A)">
+      <div class="thmascot">${d.mascot}</div><div><div class="thno">종합 대사기능 · 6축 밸런스</div><div class="thname">컨디션 밸런스</div><div class="thcatch">심각한 지표부터\n건강한 축까지 한눈에</div></div></div>
+    <div class="card"><div class="ct">📡 6가지 밸런스 레이더</div>
+      <div class="radar-wrap">${radarSVG(d.zones)}
+        <div class="radar-legend"><span><i style="background:${ZONE.good.c}"></i>좋음</span><span><i style="background:${ZONE.mid.c}"></i>보통</span><span><i style="background:${ZONE.watch.c}"></i>관심</span></div></div></div>
+    <div class="card"><div class="ct">📊 지표 순위 (관심 → 건강)</div>
+      <div class="axis-list">${ranked.map(r=>{ const z=ZONE[r.zone]; return `<div class="axis-row"><span class="adot" style="background:${z.c}"></span><span class="an">${r.name}</span><span class="anote">${noteOf(r.zone)}</span><span class="az" style="color:${z.c}; background:${z.bg}">${z.t}</span></div>`; }).join('')}</div></div>`;
+  const rc=['#F67900','#F79A3D','#E3A700'];
+  document.getElementById('page-solution').innerHTML=`
+    <div class="card"><div class="ct">🎯 먼저 챙기면 좋은 순서</div>
+      ${d.prio.map((p,i)=>`<div class="prio"><div class="rank" style="background:${rc[i]}">${i+1}</div><div><div class="pn">${p[0]}</div><div class="pd">${ZONE[p[1]].t} 영역</div></div></div>`).join('')}</div>
+    <div class="card"><div class="ct">💊 맞춤 케어 영양제</div><div class="prod-row">${d.prods.map((p,i)=>prodCard([p[0],'추천 '+(i+1)])).join('')}</div></div>
+    <div class="card"><div class="ct">🍱 추천 도시락 · 습관</div><div class="meal-row">${mealCard(d.meal)}</div>
+      <div class="swaps" style="margin-top:14px"><div class="swap"><span class="arw">🍚 식단</span><span class="to">${d.diet}</span></div><div class="swap"><span class="arw">🏃 습관</span><span class="to">${d.life}</span></div></div></div>
+    <div class="card"><div class="ct">🎁 맞춤 케어 SET</div><div class="careset"><div class="cs-l"><div class="cs-t">${d.focus} 집중 케어</div><div class="cs-p"><s>${won(d.setOrig)}</s>${won(d.setPrice)}</div></div><div style="font-size:56px">🛒</div></div></div>`;
+}
+function radarSVG(zones){ const cx=210,cy=190,R=140,N=6;
+  const pt=(i,r)=>{ const a=(-90+i*(360/N))*Math.PI/180; return [cx+r*Math.cos(a), cy+r*Math.sin(a)]; };
+  let grid=''; [0.25,0.5,0.75,1].forEach(f=>{ let p=''; for(let i=0;i<N;i++){ const[x,y]=pt(i,R*f); p+=(i?'L':'M')+x.toFixed(1)+' '+y.toFixed(1);} grid+=`<path d="${p}Z" fill="none" stroke="#E1E3E8"/>`; });
+  for(let i=0;i<N;i++){ const[x,y]=pt(i,R); grid+=`<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#ECEEF1"/>`; }
+  let poly='',dots='',labels=''; zones.forEach((z,i)=>{ const r=R*(zoneScore[z]/100); const[x,y]=pt(i,r); poly+=(i?'L':'M')+x.toFixed(1)+' '+y.toFixed(1);
+    dots+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="7" fill="${ZONE[z].c}" stroke="#fff" stroke-width="2"/>`;
+    const[lx,ly]=pt(i,R+26); labels+=`<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" fill="#46474D" font-size="16" font-weight="700" text-anchor="middle" dominant-baseline="middle">${AX_SHORT[i]}</text>`; });
+  return `<svg class="radar" viewBox="0 0 420 380">${grid}<path d="${poly}Z" fill="rgba(34,195,188,.18)" stroke="#22C3BC" stroke-width="3.5"/>${dots}${labels}</svg>`;
+}
+
+/* ===== 유휴 ===== */
+let idleTimer=null,cdTimer=null,cdLeft=0;
+function resetIdle(){ if(current==='s-home'){ stopIdle(); return; } document.getElementById('idle').classList.remove('show'); clearTimeout(idleTimer); clearInterval(cdTimer); idleTimer=setTimeout(startCountdown, CFG.IDLE_MS); }
+function stopIdle(){ clearTimeout(idleTimer); clearInterval(cdTimer); document.getElementById('idle').classList.remove('show'); }
+function startCountdown(){ cdLeft=Math.round(CFG.COUNTDOWN_MS/1000); const el=document.getElementById('idle'),num=document.getElementById('idleNum'); el.classList.add('show'); num.textContent=cdLeft; cdTimer=setInterval(()=>{ cdLeft--; num.textContent=cdLeft; if(cdLeft<=0){ clearInterval(cdTimer); goHome(); } },1000); }
+['click','touchstart','pointerdown'].forEach(ev=>document.addEventListener(ev,()=>{ if(current!=='s-home') resetIdle(); },true));
+
+/* ===== 부트 ===== */
+function div(c){ const d=document.createElement('div'); d.className=c; return d; }
+function fit(){ const k=document.getElementById('kiosk'); const s=Math.min(window.innerWidth/1080, window.innerHeight/1920); k.style.transform='scale('+s+')'; }
+window.addEventListener('resize', fit); fit(); go('s-home');
+const INTRO_SRC='assets/brand/intro.mp4';
+if(INTRO_SRC){ const v=document.getElementById('introVideo'); v.src=INTRO_SRC; v.style.display='block'; document.getElementById('vfallback').style.display='none'; }
+window.addEventListener('load', initCamera);
+</script>
+</body>
+</html>
