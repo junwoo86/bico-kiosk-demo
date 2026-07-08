@@ -54,7 +54,7 @@ html,body{margin:0; height:100%; background:#0a1414; overflow:hidden;
   display:flex; align-items:center; justify-content:center; gap:12px; box-shadow:var(--shadow-sm); letter-spacing:-.02em;}
 .homebtn:active{background:var(--mint-50); transform:scale(.97);}
 /* 결과 화면 부스 CTA — 하단 좌측(처음으로 자리 비워둠), 같은 높이로 나란히 */
-.booth-cta{position:absolute; left:44px; bottom:44px; width:calc(100% - 340px); z-index:66;}
+.booth-cta{position:absolute; left:44px; bottom:44px; width:calc(100% - 378px); z-index:66;}
 .booth-cta .bcta-mini{font-size:22px; color:var(--gold); font-weight:700; margin-bottom:12px; text-align:center;}
 .booth-cta .bcta-btn{height:var(--btnH); font-size:33px; width:100%;}
 
@@ -107,23 +107,23 @@ h1{font-size:58px; line-height:1.16; margin:0 0 10px; letter-spacing:-.035em; fo
 
 /* ============ 서비스 선택(슬롯 애니메이션) ============ */
 #s-select{padding-top:112px;}
-.spinner{position:relative; width:100%; height:520px; margin-top:30px; overflow:hidden;
+.spinner{position:relative; width:100%; height:636px; margin-top:34px; overflow:hidden;
   border-radius:32px; background:linear-gradient(180deg,#fff,var(--n-50)); border:1px solid var(--line); box-shadow:var(--shadow-sm);}
 /* 좌우 페이드 */
 .spinner::before,.spinner::after{content:""; position:absolute; top:0; bottom:0; width:120px; z-index:3; pointer-events:none;}
 .spinner::before{left:0; background:linear-gradient(90deg,#fff,transparent);}
 .spinner::after{right:0; background:linear-gradient(270deg,#fff,transparent);}
 /* 중앙 선택 하이라이트 프레임 — 카드보다 살짝 크게 감싸기 */
-.spin-center{position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:364px; height:460px;
+.spin-center{position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:364px; height:576px;
   border:5px solid var(--mint); border-radius:28px; z-index:2; box-shadow:0 0 0 2000px rgba(255,255,255,.32), 0 0 40px rgba(34,195,188,.3); pointer-events:none;}
 .spin-track{position:absolute; top:50%; left:0; transform:translateY(-50%); display:flex; gap:24px; align-items:center;}
 /* 카드 = 프레임 안에 꽉 차게(윗공백 제거): 이미지 + 이름영역이 카드 높이를 채움 */
-.spin-card{width:340px; height:436px; flex-shrink:0; background:#fff; border:2px solid var(--line); border-radius:24px; overflow:hidden;
+.spin-card{width:340px; height:548px; flex-shrink:0; background:#fff; border:2px solid var(--line); border-radius:24px; overflow:hidden;
   box-shadow:var(--shadow-sm); display:flex; flex-direction:column; transition:transform .3s, box-shadow .3s;}
 .spin-card.on{transform:scale(1.04); border-color:var(--mint); box-shadow:0 12px 40px rgba(34,195,188,.3);}
-.spin-card img{width:100%; height:322px; object-fit:cover; background:var(--n-50); flex-shrink:0;}
+.spin-card img{width:100%; height:434px; object-fit:cover; background:var(--n-50); flex-shrink:0;}
 .spin-card .sn{flex:1; display:flex; align-items:center; justify-content:center; padding:12px 18px; font-size:30px; font-weight:800; text-align:center; color:var(--n-900); letter-spacing:-.03em; line-height:1.2;}
-.spin-result{margin-top:34px; text-align:center; opacity:0; transform:translateY(16px); transition:opacity .5s, transform .5s;}
+.spin-result{margin-top:58px; text-align:center; opacity:0; transform:translateY(16px); transition:opacity .5s, transform .5s;}
 .spin-result.show{opacity:1; transform:none;}
 .spin-result .rlabel{font-size:30px; color:var(--txt-dim); font-weight:600;}
 .spin-result .rname{font-size:52px; font-weight:800; color:var(--mint-600); margin:6px 0 4px; letter-spacing:-.03em;}
@@ -249,6 +249,11 @@ svg.radar{width:440px; height:380px; flex-shrink:0; display:block; margin:0 auto
 .benefit .bi{font-size:56px; width:78px; text-align:center; flex-shrink:0;}
 .benefit .bt{font-size:32px; font-weight:800; color:var(--n-900); margin-bottom:5px; letter-spacing:-.02em;}
 .benefit .bd{font-size:23px; color:var(--txt-dim); line-height:1.35; font-weight:500;}
+.benefit .qr-row{display:flex; gap:16px; flex-shrink:0;}
+.benefit .qr{display:flex; flex-direction:column; align-items:center; gap:8px;}
+.benefit .qrimg{width:132px; height:132px; border-radius:14px; background:#fff; border:2px solid var(--line); padding:9px;}
+.benefit .qrimg svg{width:100%; height:100%; display:block;}
+.benefit .qr span{font-size:20px; font-weight:800; color:var(--n-700);}
 
 /* 유휴 */
 .idle{position:absolute; inset:0; z-index:90; background:rgba(243,245,247,.94); display:none; flex-direction:column; align-items:center; justify-content:center; text-align:center; backdrop-filter:blur(4px);}
@@ -299,14 +304,14 @@ svg.radar{width:440px; height:380px; flex-shrink:0; display:block; margin:0 auto
   <!-- 서비스 선택(슬롯) -->
   <section class="screen" id="s-select">
     <div class="sub">🔎 바이오컴 분석 중에서 딱 맞는 걸 골라드릴게요</div>
-    <h1 style="margin-top:14px">당신에게 맞는 분석은?</h1>
+    <h1 style="margin-top:14px">나에게 맞는 분석은?</h1>
     <div class="spinner">
       <div class="spin-track" id="spinTrack"></div>
       <div class="spin-center"></div>
     </div>
     <div class="spin-result" id="spinResult">
-      <div class="rlabel">✨ 당신에게 추천하는 분석</div>
-      <div class="rname" id="spinName">—</div>
+      <div class="rlabel">✨ 나에게 딱 맞는 분석</div>
+      <div class="rname" id="spinName"></div>
       <div class="rmini" id="spinMini"></div>
       <button class="btn btn-primary btn-lg" id="spinBtn" style="max-width:620px; margin:28px auto 0" onclick="onSpinProceed()">이 분석으로 진행하기 →</button>
     </div>
@@ -346,7 +351,12 @@ svg.radar{width:440px; height:380px; flex-shrink:0; display:block; margin:0 auto
     <div class="coffee-hero"><div class="cup">☕</div><h1 style="margin-top:6px">부스로 오시면,</h1>
       <div class="sub">앱 설치하고 <b class="accent">드립커피 한 잔</b> 받아가세요 (따뜻/아이스)</div></div>
     <div class="benefit-list">
-      <div class="benefit hi"><div class="bi">☕</div><div><div class="bt">앱 다운로드 → 드립커피 증정</div><div class="bd">따뜻하게, 시원하게 — 원하는 대로. 지금 바로 받아가세요.</div></div></div>
+      <div class="benefit hi"><div class="bi">☕</div>
+        <div style="flex:1"><div class="bt">앱 다운로드하면 드립커피 한 잔</div><div class="bd">QR을 찍어 앱을 설치하고, 부스에서 커피를 받아가세요. 따뜻하게, 시원하게 원하는 대로요.</div></div>
+        <div class="qr-row">
+          <div class="qr"><div class="qrimg" id="qrAos"></div><span>안드로이드</span></div>
+          <div class="qr"><div class="qrimg" id="qrIos"></div><span>아이폰</span></div>
+        </div></div>
       <div class="benefit"><div class="bi">🔬</div><div><div class="bt">5종 분석 서비스 상세 소개</div><div class="bd">음식물 과민증 · 종합 대사기능 등 5종 분석 서비스와 샘플 리포트·솔루션을 담당자가 자세히 설명해 드려요.</div></div></div>
       <div class="benefit"><div class="bi">🍱</div><div><div class="bt">맞춤 건기식 · 도시락 체험</div><div class="bd">내 결과에 맞춘 보충제와 저당·저속노화 도시락을 직접 보고 맛볼 수 있어요.</div></div></div>
       <div class="benefit"><div class="bi">📱</div><div><div class="bt">앱 챌린지 참여</div><div class="bd">21일 이너뷰티 챌린지로 분석 이후의 변화까지 이어가세요.</div></div></div>
@@ -565,18 +575,18 @@ function runSpin(reco){
   track.style.transition='transform 4s cubic-bezier(.12,.66,.1,1)'; track.style.transform='translate('+targetX+'px, -50%)';
   setTimeout(()=>{ [...cards].forEach((c,idx)=>c.classList.toggle('on', idx===targetIndex));
     const svc=SERVICES[recoIdx]; document.getElementById('spinName').textContent=svc.n;
-    document.getElementById('spinMini').textContent = reco==='igg' ? '손끝 혈액 한 방울로 · 나와 맞는 음식을 확인해요' : '유기산 검체로 · 6가지 대사 밸런스를 확인해요';
+    document.getElementById('spinMini').textContent = reco==='igg' ? '손끝 피 한 방울로 나와 맞는 음식을 알아봐요' : '간단한 검사 한 번으로 6가지 몸 밸런스를 알아봐요';
     result.classList.add('show');
   }, 4150);
 }
 
 /* 검체 */
 function startSpecimen(svc){ S.chosen=svc; const stage=document.getElementById('specStage');
-  if(svc==='igg'){ document.getElementById('specTitle').textContent='손끝에서 혈액 한 방울';
-    document.getElementById('specSub').textContent='아래 ‘검체 받기’를 누르면 DBS 카드에 혈액이 스며들어요';
-    stage.innerHTML=`<div class="finger">👆</div><div class="blood-drop" id="drop"></div><div class="dbs"><div class="fill" id="dbsFill"></div><div class="lbl">DBS · 혈액 흡수 카드</div></div>`;
-  }else{ document.getElementById('specTitle').textContent='검체 튜브에 담기';
-    document.getElementById('specSub').textContent='아래 ‘검체 받기’를 누르면 유기산 검체가 담겨요';
+  if(svc==='igg'){ document.getElementById('specTitle').textContent='손끝에서 피 한 방울';
+    document.getElementById('specSub').textContent='‘검체 받기’를 누르면 피 한 방울이 카드에 톡 스며들어요';
+    stage.innerHTML=`<div class="finger">👆</div><div class="blood-drop" id="drop"></div><div class="dbs"><div class="fill" id="dbsFill"></div><div class="lbl">피를 흡수하는 카드</div></div>`;
+  }else{ document.getElementById('specTitle').textContent='검체를 통에 담기';
+    document.getElementById('specSub').textContent='‘검체 받기’를 누르면 검체가 통에 차올라요';
     stage.innerHTML=`<div class="tube"><div class="cap"></div><div class="ticks"><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="liquid" id="tubeLiquid"></div></div>`;
   }
   document.getElementById('specBtn').style.display=''; go('s-specimen'); }
@@ -616,11 +626,11 @@ function renderIgg(d){ const z=d.zones;
     ${foodCard('🟡', '보통 (옅은 반응)', z.mid, d.mid, '#E3A700', '#FFF8D8', '해당 없음')}
     ${foodCard('💚', '나와 잘 맞는 음식', z.good, d.good, '#12BA7E', '#E9FBF5', '')}`;
   document.getElementById('page-solution').innerHTML=`
-    <div class="card"><div class="ct">🔄 이렇게 바꿔보세요 (스마트 스왑)</div>
+    <div class="card"><div class="ct">🔄 이렇게 바꿔 먹어보세요</div>
       <div class="swaps">${d.swaps.map(s=>`<div class="swap"><span class="from">${s[0]}</span><span class="arw">→</span><span class="to">${s[1]}</span></div>`).join('')}</div></div>
-    <div class="card"><div class="ct">💊 ${d.typeName} 맞춤 포뮬러</div><div class="prod-row">${d.prods.map(prodCard).join('')}</div></div>
+    <div class="card"><div class="ct">💊 ${d.typeName} 맞춤 영양제</div><div class="prod-row">${d.prods.map(prodCard).join('')}</div></div>
     <div class="card"><div class="ct">🍱 내 몸에 맞는 도시락</div><div class="meal-row">${d.meals.map(mealCard).join('')}</div></div>
-    <div class="card"><div class="ct">🎁 맞춤 케어 SET</div><div class="careset"><div class="cs-l"><div class="cs-t">${d.typeName}을 위한 한 번에 케어</div><div class="cs-p"><s>${won(d.setOrig)}</s>${won(d.setPrice)}</div></div><div style="font-size:56px">🛒</div></div></div>`;
+    <div class="card"><div class="ct">🎁 한 번에 챙기는 케어 세트</div><div class="careset"><div class="cs-l"><div class="cs-t">${d.typeName}을 위해 한 번에 챙기기</div><div class="cs-p"><s>${won(d.setOrig)}</s>${won(d.setPrice)}</div></div><div style="font-size:56px">🛒</div></div></div>`;
 }
 function zonePill(k,label,n){ const c=FZONE[k]||'#F67900'; const bg=k==='good'?'#E9FBF5':k==='mid'?'#FFF8D8':'#FFF4EA';
   return `<div class="zone-pill" style="border-color:${c}33; background:${bg}"><div class="zn" style="color:${c}">${label}</div><div class="zc" style="color:${c}">${n}</div><div class="zu">종</div></div>`; }
@@ -630,11 +640,11 @@ function renderCmfa(d){
   const noteOf=z=> z==='watch'?'조금 챙겨보면 좋아요':z==='mid'?'무난한 편이에요':'건강해요 👍';
   document.getElementById('page-report').innerHTML=`
     <div class="type-hero" style="background:linear-gradient(120deg,#22C3BC,#12A09A)">
-      <div class="thmascot">${d.mascot}</div><div><div class="thno">종합 대사기능 · 6축 밸런스</div><div class="thname">컨디션 밸런스</div><div class="thcatch">심각한 지표부터\n건강한 축까지 한눈에</div></div></div>
+      <div class="thmascot">${d.mascot}</div><div><div class="thno">종합 대사기능 · 6가지 밸런스</div><div class="thname">컨디션 밸런스</div><div class="thcatch">챙길 항목부터\n건강한 항목까지 한눈에</div></div></div>
     <div class="card"><div class="ct">📡 6가지 밸런스 레이더</div>
       <div class="radar-wrap">${radarSVG(d.zones)}
         <div class="radar-legend"><span><i style="background:${ZONE.good.c}"></i>좋음</span><span><i style="background:${ZONE.mid.c}"></i>보통</span><span><i style="background:${ZONE.watch.c}"></i>관심</span></div></div></div>
-    <div class="card"><div class="ct">📊 지표 순위 (관심 → 건강)</div>
+    <div class="card"><div class="ct">📊 항목별 순위 (관심부터)</div>
       <div class="axis-list">${ranked.map(r=>{ const z=ZONE[r.zone]; return `<div class="axis-row"><span class="adot" style="background:${z.c}"></span><span class="an">${r.name}</span><span class="anote">${noteOf(r.zone)}</span><span class="az" style="color:${z.c}; background:${z.bg}">${z.t}</span></div>`; }).join('')}</div></div>`;
   const rc=['#F67900','#F79A3D','#E3A700'];
   document.getElementById('page-solution').innerHTML=`
@@ -643,7 +653,7 @@ function renderCmfa(d){
     <div class="card"><div class="ct">💊 맞춤 케어 영양제</div><div class="prod-row">${d.prods.map((p,i)=>prodCard([p[0],'추천 '+(i+1)])).join('')}</div></div>
     <div class="card"><div class="ct">🍱 추천 도시락 · 습관</div><div class="meal-row">${mealCard(d.meal)}</div>
       <div class="swaps" style="margin-top:14px"><div class="swap"><span class="arw">🍚 식단</span><span class="to">${d.diet}</span></div><div class="swap"><span class="arw">🏃 습관</span><span class="to">${d.life}</span></div></div></div>
-    <div class="card"><div class="ct">🎁 맞춤 케어 SET</div><div class="careset"><div class="cs-l"><div class="cs-t">${d.focus} 집중 케어</div><div class="cs-p"><s>${won(d.setOrig)}</s>${won(d.setPrice)}</div></div><div style="font-size:56px">🛒</div></div></div>`;
+    <div class="card"><div class="ct">🎁 한 번에 챙기는 케어 세트</div><div class="careset"><div class="cs-l"><div class="cs-t">${d.focus} 집중 케어</div><div class="cs-p"><s>${won(d.setOrig)}</s>${won(d.setPrice)}</div></div><div style="font-size:56px">🛒</div></div></div>`;
 }
 function radarSVG(zones){ const cx=210,cy=190,R=140,N=6;
   const pt=(i,r)=>{ const a=(-90+i*(360/N))*Math.PI/180; return [cx+r*Math.cos(a), cy+r*Math.sin(a)]; };
@@ -657,15 +667,27 @@ function radarSVG(zones){ const cx=210,cy=190,R=140,N=6;
 
 /* ===== 유휴 ===== */
 let idleTimer=null,cdTimer=null,cdLeft=0;
-function resetIdle(){ if(current==='s-home'){ stopIdle(); return; } document.getElementById('idle').classList.remove('show'); clearTimeout(idleTimer); clearInterval(cdTimer); idleTimer=setTimeout(startCountdown, CFG.IDLE_MS); }
+function idleMs(){ return current==='s-benefit' ? 10000 : CFG.IDLE_MS; }        // 베네핏은 10초 뒤 복귀
+function cdMs(){ return current==='s-benefit' ? 3000 : CFG.COUNTDOWN_MS; }        // 대기 카운트다운 3초
+function resetIdle(){ if(current==='s-home'){ stopIdle(); return; } document.getElementById('idle').classList.remove('show'); clearTimeout(idleTimer); clearInterval(cdTimer); idleTimer=setTimeout(startCountdown, idleMs()); }
 function stopIdle(){ clearTimeout(idleTimer); clearInterval(cdTimer); document.getElementById('idle').classList.remove('show'); }
-function startCountdown(){ cdLeft=Math.round(CFG.COUNTDOWN_MS/1000); const el=document.getElementById('idle'),num=document.getElementById('idleNum'); el.classList.add('show'); num.textContent=cdLeft; cdTimer=setInterval(()=>{ cdLeft--; num.textContent=cdLeft; if(cdLeft<=0){ clearInterval(cdTimer); goHome(); } },1000); }
+function startCountdown(){ cdLeft=Math.round(cdMs()/1000); const el=document.getElementById('idle'),num=document.getElementById('idleNum'); el.classList.add('show'); num.textContent=cdLeft; cdTimer=setInterval(()=>{ cdLeft--; num.textContent=cdLeft; if(cdLeft<=0){ clearInterval(cdTimer); goHome(); } },1000); }
 ['click','touchstart','pointerdown'].forEach(ev=>document.addEventListener(ev,()=>{ if(current!=='s-home') resetIdle(); },true));
+
+/* ===== 목업 QR (실제 스토어 링크 확정 전 — 느낌용 가짜 QR) ===== */
+function fakeQR(seed){
+  const N=25, size=100, cell=size/N; let s=seed; const rnd=()=>{ s=(s*9301+49297)%233280; return s/233280; };
+  let d=''; for(let y=0;y<N;y++)for(let x=0;x<N;x++){ if((x<8&&y<8)||(x>=N-8&&y<8)||(x<8&&y>=N-8)) continue; if(rnd()>0.52) d+='<rect x="'+(x*cell)+'" y="'+(y*cell)+'" width="'+cell+'" height="'+cell+'"/>'; }
+  const finder=(ox,oy)=>{ let r=''; for(let y=0;y<7;y++)for(let x=0;x<7;x++){ const edge=(x===0||x===6||y===0||y===6), c=(x>=2&&x<=4&&y>=2&&y<=4); if(edge||c) r+='<rect x="'+((ox+x)*cell)+'" y="'+((oy+y)*cell)+'" width="'+cell+'" height="'+cell+'"/>'; } return r; };
+  d+=finder(0,0)+finder(N-7,0)+finder(0,N-7);
+  return '<svg viewBox="0 0 '+size+' '+size+'" fill="#171719"><rect width="'+size+'" height="'+size+'" fill="#fff"/>'+d+'</svg>';
+}
+function renderQRs(){ const a=document.getElementById('qrAos'), i=document.getElementById('qrIos'); if(a) a.innerHTML=fakeQR(48271); if(i) i.innerHTML=fakeQR(90833); }
 
 /* ===== 부트 ===== */
 function div(c){ const d=document.createElement('div'); d.className=c; return d; }
 function fit(){ const k=document.getElementById('kiosk'); const s=Math.min(window.innerWidth/1080, window.innerHeight/1920); k.style.transform='scale('+s+')'; }
-window.addEventListener('resize', fit); fit(); go('s-home');
+window.addEventListener('resize', fit); fit(); renderQRs(); go('s-home');
 const INTRO_SRC='assets/brand/intro.mp4';
 if(INTRO_SRC){ const v=document.getElementById('introVideo'); v.src=INTRO_SRC; v.style.display='block'; document.getElementById('vfallback').style.display='none'; }
 window.addEventListener('load', initCamera);
