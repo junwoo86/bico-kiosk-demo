@@ -188,6 +188,11 @@ h1{font-size:58px; line-height:1.16; margin:0 0 10px; letter-spacing:-.035em; fo
 .tabhint{font-size:18px; font-weight:800; color:var(--mint-600); background:#fff; padding:5px 12px; border-radius:12px; box-shadow:var(--shadow-sm); white-space:nowrap;}
 .result-tabs button.on .tabhint{display:none;}
 .rpages{flex:1; overflow:hidden;}
+/* 페이지 내 전환 버튼(탭 대체) — 마지막 카드 아래 단일 버튼 */
+.rpage-nav{width:100%; height:94px; border-radius:24px; font-size:32px; font-weight:800; font-family:inherit; letter-spacing:-.02em; margin-top:6px; display:flex; align-items:center; justify-content:center; gap:12px; cursor:pointer; transition:transform .12s;}
+.rpage-nav:active{transform:scale(.98);}
+.rpage-nav.go-sol{background:linear-gradient(120deg,var(--mint),#17B3AD); color:#fff; border:none; box-shadow:0 10px 26px rgba(34,195,188,.34);}
+.rpage-nav.go-rep{background:#fff; color:var(--mint-600); border:2.5px solid var(--mint);}
 .rpage{display:none; height:100%;} .rpage.on{display:block; animation:fade .35s;}
 .card{background:#fff; border:1px solid var(--line); border-radius:24px; padding:24px 26px; margin-bottom:16px; box-shadow:var(--shadow-sm);}
 .ct{display:flex; align-items:center; gap:9px; font-size:26px; color:var(--n-900); font-weight:800; margin-bottom:14px; letter-spacing:-.02em;}
@@ -371,10 +376,6 @@ svg.radar-igg{width:414px; height:306px; flex-shrink:0; display:block; margin:0 
 
   <!-- 리포트/솔루션 -->
   <section class="screen" id="s-result">
-    <div class="result-tabs">
-      <button id="tabReport" class="on" onclick="showPage('report')">📄 내 리포트<span class="tabhint">👆 눌러보기</span></button>
-      <button id="tabSolution" onclick="showPage('solution')">💡 맞춤 솔루션<span class="tabhint">👆 눌러보기</span></button>
-    </div>
     <div class="rpages"><div class="rpage on" id="page-report"></div><div class="rpage" id="page-solution"></div></div>
   </section>
 
@@ -717,8 +718,7 @@ function showResult(){ const svc=S.chosen; let idx;
   const shownKey=svc==='igg'?'shownIgg':'shownCmfa'; if(!S[shownKey]){ if(usedRotation) bumpIdx(svc); S[shownKey]=true; }
   if(svc==='igg') renderIgg(DUMMY_IGG[idx]); else renderCmfa(DUMMY_CMFA[idx]);
   showPage('report'); go('s-result'); }
-function showPage(p){ document.getElementById('page-report').classList.toggle('on', p==='report'); document.getElementById('page-solution').classList.toggle('on', p==='solution');
-  document.getElementById('tabReport').classList.toggle('on', p==='report'); document.getElementById('tabSolution').classList.toggle('on', p==='solution'); resetIdle(); }
+function showPage(p){ document.getElementById('page-report').classList.toggle('on', p==='report'); document.getElementById('page-solution').classList.toggle('on', p==='solution'); resetIdle(); }
 const won=n=>n.toLocaleString('ko-KR')+'원';
 function prodCard(p){ return `<div class="prod"><img class="pimg" src="${p[0].img}" alt=""><div class="pbody"><div class="prank">${p[1]}</div><div class="pnm">${p[0].n}</div><div class="pk">${p[0].key}</div><div class="pprice"><s>${won(p[0].orig)}</s>${won(p[0].price)}</div></div></div>`; }
 function mealCard(m){ return `<div class="meal"><img class="mimg" src="${m.img}" alt=""><div class="mbody"><span class="mtag">${m.tag}</span><div class="mnm">${m.n}</div><div class="mnut"><span><b>${m.cal}</b>kcal</span><span>단백 <b>${m.pro}</b>g</span></div></div></div>`; }
@@ -744,14 +744,16 @@ function renderIgg(d){
           <span class="lvl-tag" style="color:${L.color}">${L.tag} · <b>${L.hint}</b></span>
           <span class="lvl-cnt">${foods.length}종</span></div>
         ${foods.length ? `<div class="foodchips">${foods.map(f=>chip(f,L.color)).join('')}</div>` : `<div class="lvl-empty">해당 음식 없음 👍</div>`}
-      </div>`; }).join('')}`;
+      </div>`; }).join('')}
+    <button class="rpage-nav go-sol" onclick="showPage('solution')">💡 이제 맞춤 솔루션 보기 →</button>`;
   const tipLine = sym.tip ? `<div class="routine" style="margin-top:12px">💡 ${sym.tip}</div>` : '';
   document.getElementById('page-solution').innerHTML=`
     <div class="card"><div class="ct">🔄 이렇게 바꿔 먹어보세요</div>
       <div class="swaps">${d.swaps.map(s=>`<div class="swap"><span class="from">${s[0]}</span><span class="arw">→</span><span class="to">${s[1]}</span></div>`).join('')}</div></div>
     <div class="card"><div class="ct">💊 ${d.typeName} 맞춤 영양제</div><div class="prod-row">${d.prods.map(prodCard).join('')}</div></div>
     <div class="card"><div class="ct">🍱 내 몸에 맞는 도시락</div><div class="meal-row">${d.meals.map(mealCard).join('')}</div></div>
-    <div class="card"><div class="ct">🎁 한 번에 챙기는 케어 세트</div><div class="careset"><div class="cs-l"><div class="cs-t">${d.typeName}을 위해 한 번에 챙기기</div><div class="cs-p"><s>${won(d.setOrig)}</s>${won(d.setPrice)}</div></div><div style="font-size:56px">🛒</div></div>${tipLine}</div>`;
+    <div class="card"><div class="ct">🎁 한 번에 챙기는 케어 세트</div><div class="careset"><div class="cs-l"><div class="cs-t">${d.typeName}을 위해 한 번에 챙기기</div><div class="cs-p"><s>${won(d.setOrig)}</s>${won(d.setPrice)}</div></div><div style="font-size:56px">🛒</div></div>${tipLine}</div>
+    <button class="rpage-nav go-rep" onclick="showPage('report')">← 다시 내 리포트 확인하기</button>`;
 }
 
 function renderCmfa(d){
@@ -764,7 +766,8 @@ function renderCmfa(d){
       <div class="radar-wrap">${radarSVG(d.zones)}
         <div class="radar-legend"><span><i style="background:${ZONE.good.c}"></i>좋음</span><span><i style="background:${ZONE.mid.c}"></i>보통</span><span><i style="background:${ZONE.watch.c}"></i>관심</span></div></div></div>
     <div class="card"><div class="ct">📊 항목별 순위 (관심부터)</div>
-      <div class="axis-list">${ranked.map(r=>{ const z=ZONE[r.zone]; return `<div class="axis-row"><span class="adot" style="background:${z.c}"></span><span class="an">${r.name}</span><span class="anote">${noteOf(r.zone)}</span><span class="az" style="color:${z.c}; background:${z.bg}">${z.t}</span></div>`; }).join('')}</div></div>`;
+      <div class="axis-list">${ranked.map(r=>{ const z=ZONE[r.zone]; return `<div class="axis-row"><span class="adot" style="background:${z.c}"></span><span class="an">${r.name}</span><span class="anote">${noteOf(r.zone)}</span><span class="az" style="color:${z.c}; background:${z.bg}">${z.t}</span></div>`; }).join('')}</div></div>
+    <button class="rpage-nav go-sol" onclick="showPage('solution')">💡 이제 맞춤 솔루션 보기 →</button>`;
   const rc=['#F67900','#F79A3D','#E3A700'];
   document.getElementById('page-solution').innerHTML=`
     <div class="card"><div class="ct">🎯 먼저 챙기면 좋은 순서</div>
@@ -772,7 +775,8 @@ function renderCmfa(d){
     <div class="card"><div class="ct">💊 맞춤 케어 영양제</div><div class="prod-row">${d.prods.map((p,i)=>prodCard([p[0],'추천 '+(i+1)])).join('')}</div></div>
     <div class="card"><div class="ct">🍱 추천 도시락 · 습관</div><div class="meal-row">${mealCard(d.meal)}</div>
       <div class="swaps" style="margin-top:14px"><div class="swap"><span class="arw">🍚 식단</span><span class="to">${d.diet}</span></div><div class="swap"><span class="arw">🏃 습관</span><span class="to">${d.life}</span></div></div></div>
-    <div class="card"><div class="ct">🎁 한 번에 챙기는 케어 세트</div><div class="careset"><div class="cs-l"><div class="cs-t">${d.focus} 집중 케어</div><div class="cs-p"><s>${won(d.setOrig)}</s>${won(d.setPrice)}</div></div><div style="font-size:56px">🛒</div></div></div>`;
+    <div class="card"><div class="ct">🎁 한 번에 챙기는 케어 세트</div><div class="careset"><div class="cs-l"><div class="cs-t">${d.focus} 집중 케어</div><div class="cs-p"><s>${won(d.setOrig)}</s>${won(d.setPrice)}</div></div><div style="font-size:56px">🛒</div></div></div>
+    <button class="rpage-nav go-rep" onclick="showPage('report')">← 다시 내 리포트 확인하기</button>`;
 }
 function radarSVG(zones){ const cx=210,cy=190,R=140,N=6;
   const pt=(i,r)=>{ const a=(-90+i*(360/N))*Math.PI/180; return [cx+r*Math.cos(a), cy+r*Math.sin(a)]; };
