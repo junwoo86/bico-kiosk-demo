@@ -37,19 +37,18 @@ html,body{margin:0; height:100%; background:#0a1414; overflow:hidden;
 #kiosk{position:absolute; top:50%; left:50%; width:1080px; height:1920px; transform-origin:center center; background:var(--bg); color:var(--txt); overflow:hidden;}
 
 /* 고지 바 — 하단 고정(독립) */
-.topbar{position:absolute; bottom:0; left:0; right:0; height:72px; display:flex; align-items:center; justify-content:center;
-  padding:0 44px; z-index:60; background:#fff; border-top:1px solid var(--line);}
-.disclaimer{font-size:23px; color:var(--n-500); font-weight:600; letter-spacing:-.02em;}
-.disclaimer b{color:var(--mint-600);}
+.topbar{position:absolute; top:0; left:0; right:0; height:104px; display:flex; align-items:center; justify-content:center;
+  padding:0 56px; z-index:60; background:#fff; border-bottom:1px solid var(--line);}
+.topbar .logo-img{height:98px; width:auto; display:block;}
 
 /* 진행 인디케이터 */
-.stepper{position:absolute; top:20px; left:0; right:0; display:flex; gap:12px; justify-content:center; z-index:55;}
+.stepper{position:absolute; top:124px; left:0; right:0; display:flex; gap:12px; justify-content:center; z-index:55;}
 .stepper.hidden{display:none;}
 .stepper .dot{width:64px; height:8px; border-radius:4px; background:var(--n-100); transition:.3s;}
 .stepper .dot.on{background:var(--mint); box-shadow:0 0 0 4px var(--mint-50);}
 
 /* 우하단 내비 — [뒤로][처음] 나란히 (모든 화면 공통, 표준 버튼 높이) */
-.botnav{position:absolute; right:44px; bottom:116px; z-index:67; display:flex; gap:18px; align-items:flex-end;}
+.botnav{position:absolute; right:44px; bottom:94px; z-index:67; display:flex; gap:18px; align-items:flex-end;}
 .navbtn{height:var(--btnH); border-radius:28px; background:#fff; font-weight:800; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:var(--shadow-sm); letter-spacing:-.02em;}
 .navbtn:active{transform:scale(.97);}
 .navbtn.back{width:168px; border:2.5px solid var(--n-200); color:var(--n-600); font-size:32px;}
@@ -57,11 +56,11 @@ html,body{margin:0; height:100%; background:#0a1414; overflow:hidden;
 .navbtn.home{width:132px; border:2.5px solid var(--mint); color:var(--mint-600); font-size:32px;}
 .navbtn.home:active{background:var(--mint-50);}
 /* 결과 화면 부스 CTA — 하단 좌측(처음으로 자리 비워둠), 같은 높이로 나란히 */
-.booth-cta{position:absolute; left:44px; bottom:116px; width:calc(100% - 426px); z-index:66;}
+.booth-cta{position:absolute; left:44px; bottom:94px; width:calc(100% - 426px); z-index:66;}
 .booth-cta .bcta-mini{font-size:22px; color:var(--gold); font-weight:700; margin-bottom:12px; text-align:center;}
 .booth-cta .bcta-btn{height:var(--btnH); font-size:33px; width:100%;}
 
-.screen{position:absolute; top:0; left:0; right:0; bottom:0; display:none; flex-direction:column; padding:48px 56px 44px; overflow:hidden;}
+.screen{position:absolute; top:0; left:0; right:0; bottom:0; display:none; flex-direction:column; padding:152px 56px 44px; overflow:hidden;}
 .screen.active{display:flex; animation:fade .4s cubic-bezier(.2,.7,.3,1);}
 @keyframes fade{from{opacity:0; transform:translateY(12px);} to{opacity:1; transform:none;}}
 
@@ -76,7 +75,7 @@ h1{font-size:58px; line-height:1.16; margin:0 0 10px; letter-spacing:-.035em; fo
 .btn-lg{height:var(--btnH); font-size:40px; width:100%;}
 
 /* 문진 선택 */
-.choices{display:flex; flex-direction:column; gap:22px; margin-top:40px;}
+.choices{display:flex; flex-direction:column; gap:22px; margin-top:168px;}
 .choice{display:flex; align-items:center; gap:26px; padding:34px 38px; border-radius:26px; background:#fff;
   border:2px solid var(--line); font-size:38px; font-weight:700; color:var(--n-800); letter-spacing:-.02em; transition:all .15s; box-shadow:var(--shadow-sm);}
 .choice .emo{font-size:52px; width:70px; text-align:center; flex-shrink:0;}
@@ -84,7 +83,7 @@ h1{font-size:58px; line-height:1.16; margin:0 0 10px; letter-spacing:-.035em; fo
 .choice .chev{margin-left:auto; color:var(--n-200); font-size:42px;}
 
 /* ============ 0. 홈 ============ */
-#s-home{padding:0; bottom:0;}   /* 홈은 액션밴드 없이 전체 사용, 최상단부터 시작 */
+#s-home{padding:104px 0 0; bottom:0;}   /* 홈은 로고 바(104) 아래부터 시작 */
 .home-video{position:relative; width:100%; aspect-ratio:17 / 10; flex-shrink:0; overflow:hidden; background:#08201e;}
 .home-video video{width:100%; height:100%; object-fit:cover; object-position:center;}
 .home-video .vfallback{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:16px;
@@ -95,7 +94,7 @@ h1{font-size:58px; line-height:1.16; margin:0 0 10px; letter-spacing:-.035em; fo
   background:linear-gradient(120deg,var(--mint) 0%,#14B3AC 55%,#0E9A94 100%);}
 .promo-band::after{content:""; position:absolute; right:-40px; bottom:-50px; width:220px; height:220px; border-radius:50%; background:rgba(255,255,255,.08);}
 .promo-band .pc{font-size:42px; font-weight:800; letter-spacing:-.03em; line-height:1.25; min-height:106px; display:flex; align-items:center; justify-content:center; transition:opacity .4s;}
-.home-bottom{position:relative; flex:1; padding:40px 60px 222px; display:flex; flex-direction:column; align-items:center; text-align:center; background:var(--bg);}
+.home-bottom{position:relative; flex:1; padding:34px 60px 146px; display:flex; flex-direction:column; align-items:center; text-align:center; background:var(--bg);}
 .home-bottom .kick{display:inline-flex; align-items:center; gap:10px; font-size:30px; color:var(--mint-600); font-weight:800; margin-bottom:16px; background:var(--mint-50); padding:14px 28px; border-radius:22px;}
 .home-bottom h1{font-size:76px; margin-bottom:20px;}
 .home-bottom .desc{font-size:31px; color:var(--txt-dim); line-height:1.5; margin-bottom:26px; font-weight:500;}
@@ -117,7 +116,7 @@ h1{font-size:58px; line-height:1.16; margin:0 0 10px; letter-spacing:-.035em; fo
 @keyframes blink{50%{opacity:.3;}}
 
 /* ============ 서비스 선택(슬롯 애니메이션) ============ */
-#s-select{padding-top:40px;}
+#s-select{padding-top:144px;}
 .spinner{position:relative; width:100%; height:828px; margin-top:34px; overflow:hidden;
   border-radius:32px; background:linear-gradient(180deg,#fff,var(--n-50)); border:1px solid var(--line); box-shadow:var(--shadow-sm);}
 /* 좌우 페이드 */
@@ -178,7 +177,7 @@ h1{font-size:58px; line-height:1.16; margin:0 0 10px; letter-spacing:-.035em; fo
 @keyframes dots{0%{content:"";}25%{content:".";}50%{content:"..";}75%{content:"...";}}
 
 /* ============ 리포트 / 솔루션 ============ */
-#s-result{padding:24px 40px 262px;}
+#s-result{padding:118px 40px 190px;}
 /* 탭 — 두 개의 누를 수 있는 페이지로 명확히(비활성=테두리+펄스+힌트, 활성=채움+돌출) */
 .result-tabs{display:flex; gap:14px; margin-bottom:14px; flex-shrink:0; align-items:flex-end;}
 .result-tabs button{flex:1; height:80px; border:2.5px solid var(--n-200); border-radius:20px; background:var(--n-50); color:var(--n-500); font-size:27px; font-weight:800; font-family:inherit; letter-spacing:-.02em; display:flex; align-items:center; justify-content:center; gap:10px; transition:all .18s; position:relative;}
@@ -194,7 +193,7 @@ h1{font-size:58px; line-height:1.16; margin:0 0 10px; letter-spacing:-.035em; fo
 .rpage-nav.go-sol{background:linear-gradient(120deg,var(--mint),#17B3AD); color:#fff; border:none; box-shadow:0 10px 26px rgba(34,195,188,.34);}
 .rpage-nav.go-rep{background:#fff; color:var(--mint-600); border:2.5px solid var(--mint);}
 .rpage{display:none; height:100%;} .rpage.on{display:block; animation:fade .35s;}
-.card{background:#fff; border:1px solid var(--line); border-radius:24px; padding:20px 24px; margin-bottom:12px; box-shadow:var(--shadow-sm);}
+.card{background:#fff; border:1px solid var(--line); border-radius:24px; padding:20px 24px; margin-bottom:10px; box-shadow:var(--shadow-sm);}
 .ct{display:flex; align-items:center; gap:9px; font-size:26px; color:var(--n-900); font-weight:800; margin-bottom:14px; letter-spacing:-.02em;}
 
 /* 유형 히어로(컴팩트) */
@@ -237,14 +236,14 @@ svg.radar-igg{width:414px; height:306px; flex-shrink:0; display:block; margin:0 
 .axis-row .anote{font-size:22px; color:var(--txt-dim); font-weight:600;}
 
 /* 우선순위 */
-.prio{display:flex; align-items:center; gap:16px; padding:11px 18px; border-radius:18px; margin-bottom:8px; background:var(--n-50); border:1px solid var(--line);}
+.prio{display:flex; align-items:center; gap:16px; padding:9px 16px; border-radius:16px; margin-bottom:6px; background:var(--n-50); border:1px solid var(--line);}
 .prio .rank{width:48px; height:48px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:25px; font-weight:800; flex-shrink:0; color:#fff;}
 .prio .pn{font-size:29px; font-weight:800; color:var(--n-900);} .prio .pd{font-size:22px; color:var(--txt-dim); font-weight:600;}
 
 /* 제품 카드(3열 수납) */
 .prod-row{display:flex; gap:16px;}
 .prod{flex:1; min-width:0; background:#fff; border:1px solid var(--line); border-radius:22px; overflow:hidden; box-shadow:var(--shadow-sm);}
-.prod .pimg{width:100%; height:114px; object-fit:cover; background:var(--n-50); display:block;}
+.prod .pimg{width:100%; height:104px; object-fit:cover; background:var(--n-50); display:block;}
 .prod .pbody{padding:16px 16px 18px;}
 .prod .prank{display:inline-block; font-size:18px; font-weight:800; color:var(--mint-600); background:var(--mint-50); padding:5px 12px; border-radius:10px; margin-bottom:8px;}
 .prod .pnm{font-size:25px; font-weight:800; color:var(--n-900); line-height:1.2; margin-bottom:6px; letter-spacing:-.02em;}
@@ -275,10 +274,10 @@ svg.radar-igg{width:414px; height:306px; flex-shrink:0; display:block; margin:0 
 .cs-badge b{font-size:26px;}
 .bundle{display:flex; align-items:stretch; gap:8px;}
 .bundle-item{flex:1; min-width:0; background:#fff; border:1px solid var(--line); border-radius:16px; padding:12px 10px 14px; text-align:center; box-shadow:var(--shadow-sm); display:flex; flex-direction:column; align-items:center;}
-.bundle-item img{width:100%; height:120px; object-fit:cover; object-position:center; background:var(--n-50); border-radius:12px; margin-bottom:10px;}
+.bundle-item img{width:100%; height:100px; object-fit:cover; object-position:center; background:var(--n-50); border-radius:12px; margin-bottom:9px;}
 .bundle-item .bn{font-size:22px; font-weight:800; color:var(--n-900); line-height:1.2; letter-spacing:-.03em;}
 .bundle-plus{flex-shrink:0; align-self:center; font-size:34px; font-weight:800; color:var(--mint); width:20px; text-align:center;}
-.cs-syn{display:flex; gap:10px; font-size:21px; color:var(--n-700); font-weight:600; line-height:1.4; background:#fff; border:1.5px solid var(--mint-100); border-radius:14px; padding:13px 16px; margin-bottom:12px; letter-spacing:-.02em;}
+.cs-syn{display:flex; gap:10px; font-size:21px; color:var(--n-700); font-weight:600; line-height:1.35; background:#fff; border:1.5px solid var(--mint-100); border-radius:14px; padding:11px 16px; margin-bottom:10px; letter-spacing:-.02em;}
 .cs-syn span:first-child{flex-shrink:0;}
 /* 독립 영양제(각각 추천) — 가로 컴팩트 리스트 */
 .prod-list{display:flex; flex-direction:column; gap:10px;}
@@ -290,7 +289,7 @@ svg.radar-igg{width:414px; height:306px; flex-shrink:0; display:block; margin:0 
 .prow .prk{font-size:20px; color:var(--txt-dim); font-weight:600; line-height:1.3; letter-spacing:-.02em;}
 
 /* ============ 베네핏 ============ */
-#s-benefit{text-align:center; padding-top:24px;}
+#s-benefit{text-align:center; padding-top:128px;}
 .coffee-hero{margin:2px auto 20px; display:flex; flex-direction:column; align-items:center;}
 .coffee-hero .cup{font-size:130px; animation:pulse 2.4s infinite;}
 .benefit-list{display:flex; flex-direction:column; gap:16px; margin-top:10px; text-align:left;}
@@ -315,7 +314,7 @@ svg.radar-igg{width:414px; height:306px; flex-shrink:0; display:block; margin:0 
 <body>
 <div id="viewport"><div id="kiosk">
 
-  <div class="topbar"><div class="disclaimer">🎈 재미로 보는 가이드예요 · <b>의학적 진단이 아니에요</b></div></div>
+  <div class="topbar"><img class="logo-img" src="assets/brand/logo-bico.png" alt="bico"></div>
   <div class="stepper hidden" id="stepper"></div>
 
   <!-- 0. 홈 -->
