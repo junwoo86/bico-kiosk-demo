@@ -55,6 +55,8 @@ html,body{margin:0; height:100%; background:#0a1414; overflow:hidden;
 .navbtn.back:active{background:var(--n-50);}
 .navbtn.home{width:132px; border:2.5px solid var(--mint); color:var(--mint-600); font-size:32px;}
 .navbtn.home:active{background:var(--mint-50);}
+.navbtn.sol{width:auto; padding:0 34px; border:none; background:linear-gradient(120deg,var(--mint),#17B3AD); color:#fff; font-size:31px; box-shadow:0 8px 22px rgba(34,195,188,.32);}   /* 드릴다운 상세 전용 '맞춤 솔루션 보기' */
+.navbtn.sol:active{background:var(--mint-600);}
 /* 결과 화면 부스 CTA — 하단 좌측(처음으로 자리 비워둠), 같은 높이로 나란히 */
 .booth-cta{position:absolute; left:44px; bottom:94px; width:calc(100% - 426px); z-index:66;}
 .booth-cta .bcta-mini{font-size:22px; color:var(--gold); font-weight:700; margin-bottom:12px; text-align:center;}
@@ -499,6 +501,7 @@ h1{font-size:58px; line-height:1.16; margin:0 0 10px; letter-spacing:-.035em; fo
 
   <!-- 우하단 내비([뒤로][처음]) + 결과화면 부스 CTA(하단 좌측) -->
   <div class="botnav">
+    <button class="navbtn sol hidden" id="drillSolBtn" onclick="jumpToSolution()">💡 맞춤 솔루션 보기</button>
     <button class="navbtn back hidden" id="backBtn" onclick="goBack()">← 뒤로</button>
     <button class="navbtn home hidden" id="homeBtn" onclick="goHome()">🏠 홈</button>
   </div>
@@ -747,6 +750,7 @@ function go(id){
   const stepper=document.getElementById('stepper');
   document.getElementById('homeBtn').classList.toggle('hidden', id==='s-home');   // 처음: 홈 제외 전 화면
   document.getElementById('backBtn').classList.toggle('hidden', id==='s-home');   // 뒤로: 홈 제외 전 화면
+  document.getElementById('drillSolBtn').classList.toggle('hidden', !(id==='s-cat'||id==='s-sub'));   // 드릴다운 상세에서만 '맞춤 솔루션 보기'
   if(id==='s-home'){ requestAnimationFrame(renderHomeRadar); } else if(homeChartObj){ try{homeChartObj.destroy();}catch(e){} homeChartObj=null; }  // 홈 6각 차트
   if(id==='s-needs'){ renderStepper(1); stepper.classList.remove('hidden'); }
   else if(id==='s-q'){ renderStepper(2+S.qi); stepper.classList.remove('hidden'); }
@@ -893,6 +897,7 @@ function showResult(){ const svc=S.chosen;
   else { const ck=CMFA_BY_NEED[S.branch]||'WEIGHT'; S._cmfaKey=ck; renderCmfa(DUMMY_CMFA[ck]); }
   showPage('report'); go('s-result'); }
 function showPage(p){ document.getElementById('page-report').classList.toggle('on', p==='report'); document.getElementById('page-solution').classList.toggle('on', p==='solution'); const rp=document.querySelector('.rpages'); if(rp) rp.scrollTop=0; resetIdle(); }
+function jumpToSolution(){ showPage('solution'); go('s-result'); }   // 드릴다운 상세에서 솔루션으로 바로 이동
 const won=n=>n.toLocaleString('ko-KR')+'원';
 function prodCard(p){ return `<div class="prod"><img class="pimg" src="${p[0].img}" alt=""><div class="pbody"><div class="prank">${p[1]}</div><div class="pnm">${p[0].n}</div><div class="pk">${p[0].key}</div></div></div>`; }
 function bundleStrip(prods){ return prods.map((p,i)=> (i?'<span class="bundle-plus">+</span>':'')+`<div class="bundle-item"><img src="${p[0].img}" alt=""><div class="bn">${p[0].n}</div></div>`).join(''); }
