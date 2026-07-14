@@ -49,7 +49,7 @@ html,body{margin:0; height:100%; background:#0a1414; overflow:hidden;
 /* 고지 바 — 하단 고정(독립) */
 .topbar{position:absolute; top:0; left:0; right:0; height:104px; display:flex; align-items:center; justify-content:center;
   padding:0 56px; z-index:60; background:#fff; border-bottom:1px solid var(--line);}
-.topbar .logo-img{height:56px; width:auto; display:block;}
+.topbar .logo-img{height:50px; width:auto; display:block;}
 
 /* 진행 인디케이터 */
 .stepper{position:absolute; top:124px; left:0; right:0; display:flex; gap:12px; justify-content:center; z-index:55;}
@@ -250,7 +250,7 @@ h1{font-size:58px; line-height:1.16; margin:0 0 10px; letter-spacing:-.02em; fon
 .rhead .rh1{font-size:72px; font-weight:800; color:var(--n-900); letter-spacing:-.035em; line-height:1.15; margin-bottom:18px;}
 .rhead .rh2{font-size:36px; font-weight:400; color:var(--txt-dim); line-height:1.35; letter-spacing:-.01em;}
 /* ApexCharts 레이더 컨테이너 + 범례(점) — 레퍼런스 동일 */
-.apex-chart{width:100%; min-height:560px; margin:0 auto;}
+.apex-chart{width:100%; margin:0 auto 40px;}   /* SVG 레이더가 높이 결정 · 하단 여백으로 제목·범례 중앙 배치 */
 .chart-legend{display:flex; justify-content:center; gap:52px; font-size:30px; color:var(--txt-dim); font-weight:400; margin-top:18px;}
 .chart-legend span{display:flex; align-items:center; gap:12px;} .chart-legend i{width:20px; height:20px; border-radius:50%;}
 /* IgG 음식군별 반응 막대(레퍼런스 CSS 바 — 파스텔 배경+레벨색 텍스트) */
@@ -473,7 +473,7 @@ h1{font-size:58px; line-height:1.16; margin:0 0 10px; letter-spacing:-.02em; fon
 
   <!-- 베네핏 -->
   <section class="screen" id="s-benefit">
-    <div class="coffee-hero"><h1 style="margin-top:6px; font-size:70px; line-height:1.32">설명 듣고,<br><span class="accent">커피 받아가세요</span></h1></div>
+    <div class="coffee-hero"><h1 style="margin-top:6px; font-size:98px; line-height:1.14">앱 다운받고,<br><span class="accent">커피 받아가세요</span></h1></div>
     <div class="benefit-list">
       <div class="benefit hi">
         <div style="flex:1"><div class="bt">앱 다운로드하면 드립커피 한 잔</div><div class="bd">QR로 앱을 설치하고, 부스에서 커피를 받아가세요.</div></div>
@@ -983,7 +983,7 @@ function renderCmfa(d){
     <div class="rhead"><div class="rh1">종합 대사기능 분석 결과</div><div class="rh2">${rh2}</div></div>
     <div class="card"><div class="ct">6가지 대사 밸런스</div>
       <div id="cmfaChart" class="apex-chart"></div>
-      <div class="chart-legend"><span><i style="background:${ZONE.good.c}"></i>좋음</span><span><i style="background:${ZONE.mid.c}"></i>보통</span><span><i style="background:${ZONE.watch.c}"></i>주의</span></div></div>
+      <div class="home-legend"><span><i style="background:#34C759">A</i>좋음</span><span><i style="background:#8BC63F">B</i>양호</span><span><i style="background:#FFC400">C</i>주의</span><span><i style="background:#FF9500">D</i>경계</span><span><i style="background:#FF3B30">F</i>나쁨</span></div></div>
     <div class="card"><div class="ct">항목별 상세 결과</div>
       <div class="axgrid">${AX.map((name,i)=>{ const zn=d.zones[i], z=ZONE[zn], w=zoneScore[zn];
         return `<div class="axcell tappable" style="border-color:${zn==='watch'?z.c:'var(--line)'}" onclick="openCat(${i})">
@@ -1065,22 +1065,27 @@ function renderIggBar(elId, groups, tries){
   });
   iggChartObj.render();
 }
-/* CMFA 6각 레이더 = 홈 레이더와 동일한 커스텀 SVG(flat-top·5칸·grid1.5/폴리곤3·점 r6).
-   flat-top(0°=우측)이라 위·아래가 평평한 면 → 항산화 등 라벨이 뾰족 꼭짓점과 겹치지 않음. */
+/* CMFA 6각 레이더 = 홈 레이더(homeRadarSVG)와 '똑같은' 스펙: flat-top·5칸·A~F 링라벨·등급 뱃지·홈 라벨폰트(25/700).
+   페르소나 zone → 등급(A/B/C) 매핑(CGRADE). flat-top(0°=우측)이라 위·아래 평평 → 라벨이 뾰족 꼭짓점과 안 겹침. */
+const CGRADE={ good:{c:'#34C759',v:88,g:'A'}, mid:{c:'#8BC63F',v:62,g:'B'}, watch:{c:'#FFC400',v:42,g:'C'} };   // zone→홈 등급색/반경/글자
 function cmfaRadarSVG(zones){
-  const cx=450,cy=330,R=200,N=6, fs=[1,0.8,0.6,0.4,0.2];   // 5칸
+  const cx=450,cy=330,R=198,N=6, fs=[1,0.8,0.6,0.4,0.2], rl=['A','B','C','D','F'];
   const pt=(i,r)=>{ const a=(i*60)*Math.PI/180; return [cx+r*Math.cos(a), cy+r*Math.sin(a)]; };
   let grid='';
   fs.forEach((f,ri)=>{ let p=''; for(let i=0;i<N;i++){const[x,y]=pt(i,R*f); p+=(i?'L':'M')+x.toFixed(1)+' '+y.toFixed(1);} grid+=`<path d="${p}Z" fill="${ri%2?'#F7F8FA':'#fff'}" stroke="#E5E5EA" stroke-width="1.5"/>`; });
+  rl.forEach((lb,ri)=>{ const y=cy-R*fs[ri]*0.866; grid+=`<text x="${cx+12}" y="${y.toFixed(1)}" fill="#C7C7CC" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="middle">${lb}</text>`; });
   for(let i=0;i<N;i++){const[x,y]=pt(i,R); grid+=`<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#ECECEF" stroke-width="1.5"/>`;}
-  let poly='',dots='',labels='';
-  AX_SHORT.forEach((name,i)=>{ const zn=zones[i], z=ZONE[zn]||ZONE.mid, v=zoneScore[zn];
-    const[px,py]=pt(i,R*v/100); poly+=(i?'L':'M')+px.toFixed(1)+' '+py.toFixed(1);
-    dots+=`<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="6" fill="${z.c}" stroke="#fff" stroke-width="2"/>`;
-    const[lx,ly]=pt(i,R+54); const right=Math.cos(i*60*Math.PI/180)>0.01;   // 지표명 = 육각형 바깥 54px(겹침 방지)
-    labels+=`<text x="${(right?lx+8:lx-8).toFixed(1)}" y="${(ly+1).toFixed(1)}" fill="#1C1C1E" font-size="27" font-weight="700" text-anchor="${right?'start':'end'}" dominant-baseline="middle">${name}</text>`;
+  let poly='',dots='',badges='',labels='';
+  AX_SHORT.forEach((name,i)=>{ const g=CGRADE[zones[i]]||CGRADE.mid;
+    const[px,py]=pt(i,R*g.v/100); poly+=(i?'L':'M')+px.toFixed(1)+' '+py.toFixed(1);
+    dots+=`<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="6" fill="${g.c}" stroke="#fff" stroke-width="2"/>`;
+    const[bx,by]=pt(i,R+40);   // 등급 뱃지 = 육각형 바깥(홈 동일)
+    badges+=`<circle cx="${bx.toFixed(1)}" cy="${by.toFixed(1)}" r="32" fill="${g.c}" stroke="#fff" stroke-width="4"/>`
+      +`<text x="${bx.toFixed(1)}" y="${(by+2).toFixed(1)}" fill="#fff" font-size="30" font-weight="800" text-anchor="middle" dominant-baseline="central">${g.g}</text>`;
+    const right=Math.cos(i*60*Math.PI/180)>0.01;
+    labels+=`<text x="${(right?bx+46:bx-46).toFixed(1)}" y="${(by+1).toFixed(1)}" fill="#1C1C1E" font-size="28" font-weight="700" text-anchor="${right?'start':'end'}" dominant-baseline="middle">${name}</text>`;
   });
-  return `<svg viewBox="0 0 900 660" class="home-radar"><g>${grid}</g><path d="${poly}Z" fill="rgba(34,195,188,.16)" stroke="#22C3BC" stroke-width="3"/>${dots}${labels}</svg>`;
+  return `<svg viewBox="0 84 900 492" class="home-radar"><g>${grid}</g><path d="${poly}Z" fill="rgba(34,195,188,.16)" stroke="#22C3BC" stroke-width="3"/>${dots}${badges}${labels}</svg>`;   // viewBox 세로 크롭(그래픽에 밀착)
 }
 function renderCmfaRadar(elId, zones){
   const el=document.getElementById(elId); if(!el) return;
