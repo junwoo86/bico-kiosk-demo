@@ -117,11 +117,11 @@ h1{font-size:58px; line-height:1.16; margin:0 0 10px; letter-spacing:-.02em; fon
 .home-legend span{display:flex; align-items:center; gap:9px; font-size:21px; font-weight:700; color:var(--n-700);}
 .home-legend i{width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:17px; font-weight:800; font-style:normal;}   /* 등급 알파벳 들어가는 색 불렛 */
 .home-visual .hv-cap{font-size:29px; color:var(--mint-600); font-weight:700; margin-top:30px; letter-spacing:-.02em;}
-.home-steps{display:flex; gap:16px; width:100%; margin-top:115px; margin-bottom:0;}   /* 시작하기를 스텝 바로 아래로(auto 제거) */
+.home-steps{display:flex; gap:16px; width:100%; margin-top:44px; margin-bottom:0;}   /* 시작하기(위) 아래에 스텝 배치 */
 .hstep{flex:1; background:#fff; border:none; border-radius:26px; padding:36px 14px; display:flex; flex-direction:column; align-items:center; gap:18px; box-shadow:var(--shadow-sm);}
 .hstep .sn{font-size:24px; font-weight:800; color:var(--mint-600); letter-spacing:.04em; background:var(--mint-50); padding:11px 26px; border-radius:999px;}   /* STEP N = 민트 캡슐 태그(좌우 원형·상하 직선) */
 .hstep .st{font-size:31px; font-weight:700; color:var(--n-800); letter-spacing:-.02em; line-height:1.2;}
-.tap-hint{margin-top:44px; width:100%; font-size:42px; font-weight:700; color:#fff; background:var(--mint);
+.tap-hint{margin-top:115px; width:100%; font-size:42px; font-weight:700; color:#fff; background:var(--mint);
   padding:44px 76px; border-radius:34px; box-shadow:0 8px 26px rgba(34,195,188,.3); animation:pulse 2s infinite; letter-spacing:-.01em;}
 @keyframes pulse{50%{transform:scale(1.03);}}
 @keyframes blink{50%{opacity:.3;}}
@@ -409,12 +409,12 @@ h1{font-size:58px; line-height:1.16; margin:0 0 10px; letter-spacing:-.02em; fon
         <div id="homeChart"></div>
         <div class="home-legend"><span><i style="background:#34C759">A</i>좋음</span><span><i style="background:#8BC63F">B</i>양호</span><span><i style="background:#FFC400">C</i>주의</span><span><i style="background:#FF9500">D</i>경계</span><span><i style="background:#FF3B30">F</i>나쁨</span></div>
       </div>
+      <div class="tap-hint">시작하기</div>
       <div class="home-steps">
         <div class="hstep"><div class="sn">STEP 1</div><div class="st">1분 문진</div></div>
         <div class="hstep"><div class="sn">STEP 2</div><div class="st">AI 바이오 분석</div></div>
         <div class="hstep"><div class="sn">STEP 3</div><div class="st">맞춤 리포트 확인</div></div>
       </div>
-      <div class="tap-hint">시작하기</div>
     </div>
   </section>
 
