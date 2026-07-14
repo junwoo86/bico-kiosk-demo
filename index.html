@@ -1076,7 +1076,8 @@ function cmfaRadarSVG(zones){
   rl.forEach((lb,ri)=>{ const y=cy-R*fs[ri]*0.866; grid+=`<text x="${cx+12}" y="${y.toFixed(1)}" fill="#C7C7CC" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="middle">${lb}</text>`; });
   for(let i=0;i<N;i++){const[x,y]=pt(i,R); grid+=`<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#ECECEF" stroke-width="1.5"/>`;}
   let poly='',dots='',badges='',labels='';
-  AX_SHORT.forEach((name,i)=>{ const g=CGRADE[zones[i]]||CGRADE.mid;
+  const ORDER=[2,3,4,5,0,1];   // 꼭지점 순서 = 홈 배치와 일치(관심 지표 상단): 독소(우)·항산화(우하)·정신(좌하)·유전자(좌)·체중(좌상)·장(우상)
+  ORDER.forEach((ax,i)=>{ const name=AX_SHORT[ax], g=CGRADE[zones[ax]]||CGRADE.mid;
     const[px,py]=pt(i,R*g.v/100); poly+=(i?'L':'M')+px.toFixed(1)+' '+py.toFixed(1);
     dots+=`<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="6" fill="${g.c}" stroke="#fff" stroke-width="2"/>`;
     const[bx,by]=pt(i,R+40);   // 등급 뱃지 = 육각형 바깥(홈 동일)
